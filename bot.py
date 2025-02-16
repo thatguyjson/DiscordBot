@@ -44,7 +44,7 @@ color_role = {
 }
 url = None
 data = None
-README_URL = 'https://github.com/thatguyjson/DiscordBot/blob/main/README.md'
+README_URL = 'https://raw.githubusercontent.com/thatguyjson/DiscordBot/refs/heads/main/README.md'
 dripMention = "<@639904427624628224>" # can use this in (f'x') text to @ myself in discord
 
 def is_owner(ctx):
