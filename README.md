@@ -17,7 +17,8 @@ All bot commands will begin with "?"
 ?praise <user> -- Alows for any member to send 1 of 11 random praise messages to a user
 ?crumbl -- Allows for any member to get the bot to send all crumbl cookies of the week as embeds
 ?purge <number> -- Allows for an Owner to delete the last {number} of messages sent in a channel
-?timepurge <number> <units> -- Allows for an Owner to delete the last {number} of {units} of messages sent in a channel. 
+?timepurge <number> <units> -- Allows for an Owner to delete the last {number} of {units} of messages sent in a channel.
+?readme -- Allows Owners to use requests to grab the data from the github readme.md and sends it via embeds on discord
 ```
 
 ## Current Bot Events
