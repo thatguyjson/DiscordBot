@@ -1,12 +1,13 @@
 import nextcord
-from nextcord.ext import commands, tasks
-from nextcord.ui import View, Select
-from datetime import datetime, timedelta, timezone
 import mysql.connector
 import asyncio
 import time
 import random
 import requests
+from nextcord.ext import commands, tasks
+from nextcord.ui import View, Select
+from datetime import datetime, timedelta, timezone
+from constants import botToken
 
 intents = nextcord.Intents.default()
 intents.members = True
@@ -533,4 +534,4 @@ async def on_ready():
     keep_connection_alive.start()
     await log_to_channel(f'{dripMention} started task to keep DB connection alive.')
 
-bot.run('MTI4MDgxNzg2NDM1NzQ0NTY2Mw.Gi9kAj.UvQcSRkB7Q2yu21pDQzox4T8QHq-uL9lTVul_g')
+bot.run(botToken)
