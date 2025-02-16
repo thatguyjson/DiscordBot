@@ -43,6 +43,7 @@ color_role = {
 }
 url = None
 data = None
+README_URL = 'https://github.com/thatguyjson/DiscordBot/blob/main/README.md'
 dripMention = "<@639904427624628224>" # can use this in (f'x') text to @ myself in discord
 
 def is_owner(ctx):
@@ -90,6 +91,29 @@ async def log_to_channel(message):
         timestamp = datetime.fromtimestamp(pacific_time).strftime("%Y-%m-%d %H:%M:%S")
         log_message = f"**[{timestamp}]** {message}"
         await log_channel.send(log_message)
+
+@bot.command()
+@commands.check(is_owner)
+async def readme(ctx):
+    response = requests.get(README_URL)
+
+    if response.status_code == 200:
+        readme_content = response.text
+        embed_title = "📄 GitHub README.md"
+        embed_color = nextcord.Color.blue()
+
+        # Split the README into chunks of 1000 chars (Discord embeds have a 1024-char limit per field)
+        chunks = [readme_content[i:i+1000] for i in range(0, len(readme_content), 1000)]
+
+        for index, chunk in enumerate(chunks):
+            embed = nextcord.Embed(
+                title=embed_title if index == 0 else None, 
+                color=embed_color,
+                description=chunk
+            )
+            await ctx.send(embed=embed)
+    else:
+        await ctx.send("❌ Failed to fetch README.md file.")
 
 
 @tasks.loop(hours=12)
