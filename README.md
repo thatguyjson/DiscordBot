@@ -13,10 +13,6 @@
 ?timepurge <number> <units> -- Allows for an Owner to delete the last {number} of {units} of messages sent in a channel.
 ?readme -- Allows Owners to use requests to grab the data from the github readme.md and sends it via embeds on discord
 ```
-
-
-
-
 ## Current Bot Events
 ```
 on_member_join -- When a new member joins, it automatically sends 1 of 11 random messages to the welcomeChannel
