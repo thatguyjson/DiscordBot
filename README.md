@@ -1,13 +1,8 @@
 # DiscordBot by Json!
 
-> [!IMPORTANT]
-> When pasting main on PebbleHost or whatever server host, update last line of code bot.run(X) to have bot token
-
 ## Current Commands
 
 ```
-All bot commands will begin with "?"
-
 ?add_question <question> -- Allows for Owners to add questions to the live database
 ?ping -- The bot will return the ping in 'ms'
 ?new_data <new_url> -- Allows for Owners to input a new GET request URL for the crumbl.com json
@@ -22,7 +17,6 @@ All bot commands will begin with "?"
 ```
 
 ## Current Bot Events
-
 ```
 on_member_join -- When a new member joins, it automatically sends 1 of 11 random messages to the welcomeChannel
 on_message_delete -- When a member deletes a message, it will be logged and sent to a Owners only channel
