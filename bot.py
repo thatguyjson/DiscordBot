@@ -4,10 +4,15 @@ import asyncio
 import time
 import random
 import requests
+import json
 from nextcord.ext import commands, tasks
 from nextcord.ui import View, Select
 from datetime import datetime, timedelta, timezone
 from constants import botToken
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 
 intents = nextcord.Intents.default()
 intents.members = True
@@ -42,7 +47,6 @@ color_role = {
     7: ("DeepPink", "💗"),
     8: ("Maroon", "💓")
 }
-url = None
 data = None
 README_URL = 'https://raw.githubusercontent.com/thatguyjson/DiscordBot/refs/heads/main/README.md'
 dripMention = "<@639904427624628224>" # can use this in (f'x') text to @ myself in discord
@@ -116,23 +120,24 @@ async def readme(ctx):
     else:
         await ctx.send("❌ Failed to fetch README.md file.")
 
-
 @tasks.loop(hours=12)
 async def refresh_cookie_data():
-  global data
-  global cookies
-  global startDate
-  global endDate
-  try:
-    response = requests.get(url)
-    response.raise_for_status()
-    data = response.json()
-    cookies = data['pageProps']['products']['cookies']
-    startDate = data['pageProps']['currentCookieWeek']['startDate'][:10]
-    endDate = data['pageProps']['currentCookieWeek']['endDate'][:10]
-    await log_to_channel("<@639904427624628224> crumbl cookie data was refreshed")
-  except requests.exceptions.RequestException as e:
-    await log_to_channel(f"<@639904427624628224> request to refresh crumbl cookie data failed for reason: {e}")
+    global data, cookies, startDate, endDate
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    driver = webdriver.Chrome(service=Service(), options=chrome_options)
+    try:
+        driver.get('https://crumblcookies.com')
+        next_data_element = driver.find_element(By.XPATH, '//*[@id="__NEXT_DATA__"]')
+        json_data = json.loads(next_data_element.get_attribute('innerHTML'))
+        driver.quit()
+        cookies = json_data['props']['pageProps']['products']['cookies']
+        startDate = json_data['props']['pageProps']['currentCookieWeek']['startDate'][:10]
+        endDate = json_data['props']['pageProps']['currentCookieWeek']['endDate'][:10]
+        await log_to_channel("<@639904427624628224> crumbl cookie data was refreshed")
+
+    except Exception as e:
+        await log_to_channel(f"<@639904427624628224> request to refresh crumbl cookie data failed for reason: {e}")
 
 @bot.command()
 @commands.check(is_owner)
@@ -140,15 +145,6 @@ async def ping(ctx):
     latency_message = f'Ping: {round(bot.latency * 1000)} ms'
     await ctx.send(latency_message)
     await log_to_channel(latency_message)
-
-@bot.command()
-@commands.check(is_owner)
-async def new_data(ctx, new_url: str):
-  global url # grab url from outside the code
-  old_url = url # store old url real quick
-  url = new_url # take the URL where url has a set value 
-  await ctx.send(f'The url has been updated to:\n`{url}`\noriginally was: `{old_url}`')
-  refresh_cookie_data.start()
 
 @bot.event
 async def on_member_join(member):
@@ -477,8 +473,6 @@ async def on_ready():
         await log_to_channel("Could not find the welcome channel.")
     else:
         await log_to_channel(f'Logged in as {bot.user.name}. Now commencing all startup processes. Please wait est: 30 seconds...') # time.sleep(x) multuplied by 6
-        time.sleep(5)
-        await log_to_channel(f"{dripMention} \n\nPlease use ?new_data to begin auto cookie data refresh")
         time.sleep(5)
 
     # Verify Roles Message
