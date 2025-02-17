@@ -466,33 +466,8 @@ async def role_error(ctx, error):
         await ctx.send("Couldn't find the user or role. Please make sure they are valid.")
 
 """
-down below is on_ready + bot.run + cmd command to track all commands
+down below is on_ready + bot.run
 """
-
-@bot.command()
-@commands.check(is_owner)
-async def cmds(ctx):
-    """
-    Displays a list of available bot commands and their descriptions.
-    """
-    command_list = """
-    **Here is the current list of commands:**
-    - `?cmds`: Display this list of commands.
-    - `?verifyroles`, `?updateroles`, `?colorroles`: Sends role commands in <#1280805997790887978> and <#1299261004169089066>.
-    - `?ping`: Check the bot's current ping.
-    - `?kick <user> <reason>`: Kick a member with a reason.
-    - `?evict <user> <reason>`: Ban a user with a reason (similar to `?kick`).
-    - `?role <user> <role>`: Assign a role to a user (for owners).
-    - `?praise <user>`: Praise a user with one of 11 random messages.
-    - `?crumbl`: Show the Crumbl cookies of the week.
-    - `?purge <number>`: Purge a specified number of messages in a channel (for owners).
-    - `?add_question <question>`: Add a question to the QuotesDB for QOTD.
-    - `?new_data <url>`: Adds a new json url to the crumbl cookie command in case of error.
-    - `?timepurge <amount> <unit>`: Can use Minutes/Hours/Days and purge that time frame of messages
-    - `?startup1`: Starts up first part of the bot commands that need to be started
-    """
-    await ctx.send(command_list)
-    await ctx.message.delete()
 
 @bot.event
 async def on_ready():
