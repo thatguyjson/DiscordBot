@@ -321,8 +321,6 @@ async def on_message_delete(message):
         embed.add_field(name="Content", value=message.content or "No content", inline=False)
         await staff_channel.send(embed=embed)
 
-    await log_to_channel(f"Message deleted in {message.channel.name}: **'{message.content}'**")
-
 # Task to check the time every minute
 @tasks.loop(minutes=1)
 async def qotd_task():
