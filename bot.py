@@ -472,8 +472,10 @@ async def on_ready():
     if welcomeChannel is None:
         await log_to_channel("Could not find the welcome channel.")
     else:
-        await log_to_channel(f'Logged in as {bot.user.name}. Now commencing all startup processes. Please wait est: 30 seconds...') # time.sleep(x) multuplied by 6
+        await log_to_channel(f'Logged in as {bot.user.name}. Now commencing all startup processes. Please wait est: 35 seconds...') # time.sleep(x) multuplied by 6
         time.sleep(5)
+        refresh_cookie_data.start()
+        time.sleep(10)
 
     # Verify Roles Message
     channel1 = bot.get_channel(1280805997790887978)
