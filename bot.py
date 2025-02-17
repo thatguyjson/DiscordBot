@@ -9,11 +9,6 @@ from nextcord.ext import commands, tasks
 from nextcord.ui import View, Select
 from datetime import datetime, timedelta, timezone
 from constants import botToken
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
 
 intents = nextcord.Intents.default()
 intents.members = True
@@ -48,7 +43,6 @@ color_role = {
     7: ("DeepPink", "💗"),
     8: ("Maroon", "💓")
 }
-data = None
 README_URL = 'https://raw.githubusercontent.com/thatguyjson/DiscordBot/refs/heads/main/README.md'
 dripMention = "<@639904427624628224>" # can use this in (f'x') text to @ myself in discord
 
@@ -120,27 +114,6 @@ async def readme(ctx):
             await ctx.send(embed=embed)
     else:
         await ctx.send("❌ Failed to fetch README.md file.")
-
-@tasks.loop(hours=12)
-async def refresh_cookie_data():
-    global data, cookies, startDate, endDate
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-    try:
-        driver.get('https://crumblcookies.com')
-        next_data_element = driver.find_element(By.XPATH, '//*[@id="__NEXT_DATA__"]')
-        json_data = json.loads(next_data_element.get_attribute('innerHTML'))
-        driver.quit()
-        cookies = json_data['props']['pageProps']['products']['cookies']
-        startDate = json_data['props']['pageProps']['currentCookieWeek']['startDate'][:10]
-        endDate = json_data['props']['pageProps']['currentCookieWeek']['endDate'][:10]
-        await log_to_channel("<@639904427624628224> crumbl cookie data was refreshed")
-
-    except Exception as e:
-        await log_to_channel(f"<@639904427624628224> request to refresh crumbl cookie data failed for reason: {e}")
 
 @bot.command()
 @commands.check(is_owner)
@@ -384,25 +357,6 @@ async def keep_connection_alive():
         await debug_channel.send(aliveQuote)
 
 @bot.command()
-async def crumbl(ctx):
-    await ctx.send(f'The cookies for the week of {startDate} to {endDate}')
-    
-    for cookie in cookies:
-        name = cookie['name']
-        description = cookie['description']
-        image = cookie['newAerialImage']
-        if name == 'Cookie Dough Bits':
-          continue
-
-        # Create an embed for each cookie
-        embed = nextcord.Embed(title=name, description=description)
-        embed.set_image(url=image)  # Set the image to the embed
-
-        # Send the embed
-        time.sleep(1)
-        await ctx.send(embed=embed)
-
-@bot.command()
 @commands.check(is_owner)
 @commands.has_permissions(manage_messages=True)
 async def purge(ctx, amount: int):
@@ -475,10 +429,8 @@ async def on_ready():
     if welcomeChannel is None:
         await log_to_channel("Could not find the welcome channel.")
     else:
-        await log_to_channel(f'Logged in as {bot.user.name}. Now commencing all startup processes. Please wait est: 35 seconds...') # time.sleep(x) multuplied by 6
+        await log_to_channel(f'Logged in as {bot.user.name}. Now commencing all startup processes. Please wait est: 25 seconds...') # time.sleep(x) multuplied by 5
         time.sleep(5)
-        refresh_cookie_data.start()
-        time.sleep(10)
 
     # Verify Roles Message
     channel1 = bot.get_channel(1280805997790887978)
