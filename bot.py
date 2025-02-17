@@ -13,6 +13,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
 
 intents = nextcord.Intents.default()
 intents.members = True
@@ -123,9 +124,9 @@ async def readme(ctx):
 @tasks.loop(hours=12)
 async def refresh_cookie_data():
     global data, cookies, startDate, endDate
-    chrome_options = Options()
+    chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
-    driver = webdriver.Chrome(service=Service(), options=chrome_options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     try:
         driver.get('https://crumblcookies.com')
         next_data_element = driver.find_element(By.XPATH, '//*[@id="__NEXT_DATA__"]')
