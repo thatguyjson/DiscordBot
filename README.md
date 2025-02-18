@@ -12,6 +12,9 @@
 ?purge <number> -- Allows for an Owner to delete the last {number} of messages sent in a channel
 ?timepurge <number> <units> -- Allows for an Owner to delete the last {number} of {units} of messages sent in a channel.
 ?readme -- Allows Owners to use requests to grab the data from the github readme.md and sends it via embeds on discord
+?aboutme --
+?createuser --
+?upsertuserinfo --
 ```
 ## Current Bot Events
 ```
