@@ -596,7 +596,7 @@ async def aboutme(ctx):
         await ctx.send(f'Hey <@{user_discord_id}>! You don\'t seem to have a profile. Please try making one using ?createuser')
         return
     
-    name = ctx.user.display_name
+    name = ctx.author.display_name
     
     # Fetching data for the profile
     cursor.execute("SELECT user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, user_joined_at, user_created_at FROM Users WHERE user_discord_id = %s", (user_discord_id,))
