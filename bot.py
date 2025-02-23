@@ -262,6 +262,9 @@ async def role(ctx, member: nextcord.Member = None, role: nextcord.Role = None):
 
 @bot.command()
 async def createuser(ctx):
+    if ctx.channel != 1343127549861167135:
+        await ctx.send("Please go to <#1343127549861167135> to create your profile!")
+        return
     def check(msg):
         return msg.author == ctx.author and msg.channel == ctx.channel
     user_discord_id = ctx.author.id # grabs the users ID
@@ -319,6 +322,7 @@ async def createuser(ctx):
             await ctx.send("Please enter a valid age.")
             return
         user_age = msg.content
+        user_age = int(user_age)
         await ctx.send(f"Set your age to {user_age}!")
 
     except asyncio.TimeoutError:
