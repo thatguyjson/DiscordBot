@@ -260,6 +260,17 @@ async def role(ctx, member: nextcord.Member = None, role: nextcord.Role = None):
         await ctx.send(f"An error occurred: {e}")
 
 @bot.command()
+async def createuser(ctx,):
+    user_discord_id = ctx.author.id # grabs the users ID
+    user_name = ctx.author.name # grabs the users discord name
+    user_gender = 
+    user_pronouns =
+    user_age = 
+    user_date_of_birth = 
+    user_joined_at = ctx.author.joined_at # grabs when the user joined the server // example data: 2021-05-01 12:34:56
+    user_created_at = ctx.author.created_at # grabs when the user created their account // example data: 2021-05-01 12:34:56
+
+@bot.command()
 async def praise(ctx, member: nextcord.Member = None):
     if member is None:
       await ctx.send("Please ping the user you wish to praise!")
