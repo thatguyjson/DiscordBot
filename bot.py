@@ -282,17 +282,19 @@ async def createuser(ctx):
     
     # User_gender grab
     while True:
-        await ctx.send("Please enter your gender (Male, Female, M, or F):")
+        await ctx.send("Please enter your gender (Male, Female, M,  F, NB, or NonBinary):")
         try:
             msg = await bot.wait_for("message", check=check, timeout=60)
             user_gender = msg.content.lower()
-            if user_gender not in ["male", "female", "m", "f"]:
-                await ctx.send("Invalid input. Please enter Male, Female, M, or F.")
+            if user_gender not in ["male", "female", "m", "f", "nb", "nonbinary]:
+                await ctx.send("Invalid input. Please enter Male, Female, M,  F, NB, or NonBinary")
                 continue  # Repeat the loop if input is invalid
             if user_gender == "m":
                 user_gender = "male"
             elif user_gender == "f":
                 user_gender = "female"
+            elif user_gender == "nb" or "nonbinary":
+                user_gender == "Non-Binary"
 
             await ctx.send(f"Gender set to: {user_gender.capitalize()} ✅")
             break  # Exit the loop if input is valid
@@ -381,6 +383,193 @@ async def createuser(ctx):
 
     except Exception as e:
         await ctx.send(f"An error occurred while saving your data: {e}")
+
+@bot.command()
+async def updateuser(ctx):
+    if ctx.channel.id != 1343127549861167135:
+        await ctx.send("Please use <#1343127549861167135> for all commands related to user profiles!")
+    def check(msg):
+        return msg.author == ctx.author and msg.channel == ctx.channel
+    member = ctx.author.id
+    await ctx.send(
+            f'Hey <@{member}>! What would you like to change about your profile?'
+            "1️⃣ - Gender\n"
+            "2️⃣ - Pronouns\n"
+            "3️⃣ - Age\n"
+            "4️⃣ - Birthday\n"
+            "5️⃣ - Add a Profile Bio!"
+        )
+    try:
+        msg = await bot.wait_for("message", check=check, timeout=60)
+        if msg.content == "1":
+            while True:
+                await ctx.send("Please enter your preferred gender (Male, Female, M,  F, NB, or NonBinary):")
+                try:
+                    msg = await bot.wait_for("message", check=check, timeout=60)
+                    user_gender = msg.content.lower()
+                    if user_gender not in ["male", "female", "m", "f", "nb", "nonbinary]:
+                        await ctx.send("Invalid input. Please enter Male, Female, M,  F, NB, or NonBinary")
+                        continue  # Repeat the loop if input is invalid
+                    if user_gender == "m":
+                        user_gender = "male"
+                    elif user_gender == "f":
+                        user_gender = "female"
+                    elif user_gender == "nb" or "nonbinary":
+                        user_gender == "Non-Binary"
+        
+                    await ctx.send(f"Gender set to: {user_gender.capitalize()} ✅")
+                    break  # Exit the loop if input is valid
+                except asyncio.TimeoutError:
+                    await ctx.send("You took too long to respond! ❌")
+                    return
+            try:
+                cursor.execute(
+                    """
+                    UPDATE Users
+                    SET user_gender = %s
+                    WHERE user_discord_id = %s
+                    """,
+                    (user_gender, member),
+                )
+                db.commit()
+                await ctx.send("User data successfully saved to the database! ✅")
+        
+            except Exception as e:
+                await ctx.send(f"An error occurred while saving your data: {e}")
+        elif msg.content == "2":
+            while True:
+                await ctx.send(
+                    "Please enter the number corresponding to your pronouns:\n"
+                    "1️⃣ - He/Him\n"
+                    "2️⃣ - She/Her\n"
+                    "3️⃣ - He/They\n"
+                    "4️⃣ - She/They"
+                )
+            
+                try:
+                    msg = await bot.wait_for("message", check=check, timeout=60)
+                    pronoun_choices = {"1": "He/Him", "2": "She/Her", "3": "He/They", "4": "She/They"}
+                    
+                    if msg.content not in pronoun_choices:
+                        await ctx.send("Invalid input. Please enter 1, 2, 3, or 4.")
+                        continue
+            
+                    user_pronouns = pronoun_choices[msg.content]
+                    await ctx.send(f"Pronouns set to: {user_pronouns} ✅")
+                    break
+            
+                except asyncio.TimeoutError:
+                    await ctx.send("You took too long to respond! ❌")
+                    return
+            try:
+                cursor.execute(
+                    """
+                    UPDATE Users
+                    SET user_pronouns = %s
+                    WHERE user_discord_id = %s
+                    """,
+                    (user_pronouns, member),
+                )
+                db.commit()
+                await ctx.send("User data successfully saved to the database! ✅")
+        
+            except Exception as e:
+                await ctx.send(f"An error occurred while saving your data: {e}")
+        elif msg.conent == "3":
+            while True:
+                await ctx.send("Please respond with your age!")
+                try:
+                    msg = await bot.wait_for("message", check=check, timeout=60)
+                    if len(msg.content) > 2:
+                        await ctx.send("Please enter a valid age.")
+                        continue
+                    user_age = msg.content
+                    user_age = int(user_age)
+                    await ctx.send(f"Set your age to {user_age}!")
+                    break
+            
+                except asyncio.TimeoutError:
+                    await ctx.send("You took too long to respond! ❌")
+                    return
+            try:
+                cursor.execute(
+                    """
+                    UPDATE Users
+                    SET user_age = %s
+                    WHERE user_discord_id = %s
+                    """,
+                    (user_age, member),
+                )
+                db.commit()
+                await ctx.send("User data successfully saved to the database! ✅")
+        
+            except Exception as e:
+                await ctx.send(f"An error occurred while saving your data: {e}")
+        elif msg.content == "4":
+            while True:
+                await ctx.send("Please enter your date of birth in the format YYYY-MM-DD:")
+                try:
+                    msg = await bot.wait_for("message", check=check, timeout=60)
+                    date_pattern = r"^\d{4}-\d{2}-\d{2}$"
+            
+                    if not re.match(date_pattern, msg.content):
+                        await ctx.send("Invalid format! Please enter your date of birth in YYYY-MM-DD format (e.g., 2000-05-15).")
+                        continue
+            
+                    user_date_of_birth = msg.content
+                    await ctx.send(f"Date of birth set to: {user_date_of_birth} ✅")
+                    break
+            
+                except asyncio.TimeoutError:
+                    await ctx.send("You took too long to respond! ❌")
+                    return
+            try:
+                cursor.execute(
+                    """
+                    UPDATE Users
+                    SET user_date_of_birth = %s
+                    WHERE user_discord_id = %s
+                    """,
+                    (user_date_of_birth, member),
+                )
+                db.commit()
+                await ctx.send("User data successfully saved to the database! ✅")
+        
+            except Exception as e:
+                await ctx.send(f"An error occurred while saving your data: {e}")
+        elif msg.content == "5":
+            while True:
+                await ctx.send("Please enter a bio! (Max 255 characters)")
+                try:
+                    msg = await bot.wait_for("message", check=checl, timeout=180)
+                    if len(msg.content) > 255:
+                        await ctx.send(f'HEY! <@{member}> I SAID ONLY 255 CHARACTERS MAX!!!>')
+                        continue
+                    user_bio = str(msg.content)
+                    await ctx.send("I added/updated your profiles BIO! Thanks!")
+                    break
+                except asyncio.TimeoutError:
+                    await ctx.send("You took too long to respond! ❌")
+                    return
+            try:
+                cursor.execute(
+                    """
+                    UPDATE Users
+                    SET user_bio = %s
+                    WHERE user_discord_id = %s
+                    """,
+                    (user_bio, member),
+                )
+                db.commit()
+                await ctx.send("User data successfully saved to the database! ✅")
+        
+            except Exception as e:
+                await ctx.send(f"An error occurred while saving your data: {e}")
+        else:
+            await ctx.send("You didnt enter a correct value... Please try running the command again...")
+            return
+                    
+            
 
 @bot.command()
 async def praise(ctx, member: nextcord.Member = None):
