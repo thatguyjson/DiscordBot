@@ -31,6 +31,23 @@ The database is hosted through **PebbleHost MYSQL**. It's called `customer_83400
 ```
 ---
 
+#### Users
+*Table that holds user data for the AboutMe command*
+```json
+[
+  {
+    "user_discord_id": "BIGINT && PRIMARY_KEY",
+    "user_name": "TINYTEXT",
+    "user_gender": "TINYTEXT",
+    "user_pronouns": "TINYTEXT",
+    "user_age": "TINYINT",
+    "user_date_of_birth": "DATE",
+    "user_bio": "BIGTEXT" // Optional
+  }
+]
+```
+---
+
 #### **Christmas** (DEPRECATED)
 *Previously used for Christmas related questions*
 ```json
