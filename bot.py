@@ -392,7 +392,7 @@ async def updateuser(ctx):
         return msg.author == ctx.author and msg.channel == ctx.channel
     member = ctx.author.id
     await ctx.send(
-            f'Hey <@{member}>! What would you like to change about your profile?'
+            f'Hey <@{member}>! What would you like to change about your profile?\n'
             "1️⃣ - Gender\n"
             "2️⃣ - Pronouns\n"
             "3️⃣ - Age\n"
@@ -416,6 +416,8 @@ async def updateuser(ctx):
                         user_gender = "female"
                     elif user_gender == "nb" or user_gender == "nonbinary":
                         user_gender == "Non-Binary"
+                        await ctx.send(f"Gender set to: {user_gender.capitalize()} ✅")
+                        break
         
                     await ctx.send(f"Gender set to: {user_gender.capitalize()} ✅")
                     break  # Exit the loop if input is valid
@@ -475,7 +477,7 @@ async def updateuser(ctx):
         
             except Exception as e:
                 await ctx.send(f"An error occurred while saving your data: {e}")
-        elif msg.conent == "3":
+        elif msg.content == "3":
             while True:
                 await ctx.send("Please respond with your age!")
                 try:
