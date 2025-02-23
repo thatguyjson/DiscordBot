@@ -337,7 +337,7 @@ async def createuser(ctx):
 
     
     # User_date_of_birth grab
-    whiile True:
+    while True:
         await ctx.send("Please enter your date of birth in the format YYYY-MM-DD:")
     
         try:
