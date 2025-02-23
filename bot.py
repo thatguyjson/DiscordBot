@@ -5,6 +5,7 @@ import time
 import random
 import requests
 import json
+import re
 from nextcord.ext import commands, tasks
 from nextcord.ui import View, Select
 from datetime import datetime, timedelta, timezone
