@@ -582,61 +582,66 @@ async def aboutme(ctx):
     user_discord_id = ctx.author.id
     cursor.execute("SELECT 1 FROM Users WHERE user_discord_id = %s", (user_discord_id,))
     userCheck = cursor.fetchone()  # Fetch the first result
-    if userCheck == None:
-        await ctx.send(f'Hey <@{user_discord_id}>! You dont seem to have a profile. Please try making one using ?createuser')
+    if userCheck is None:
+        await ctx.send(f'Hey <@{user_discord_id}>! You don\'t seem to have a profile. Please try making one using ?createuser')
         return
-    name = ctx.author.nick if ctx.author.nick is not None else ctx.author.name # dynamic name :O
-    user_name = cursor.execute(f"SELECT user_name FROM Users WHERE user_discord_id = {user_discord_id};")
-    user_gender = cursor.execute(f"SELECT user_gender FROM Users WHERE user_discord_id = {user_discord_id};")
-    user_pronouns = cursor.execute(f"SELECT user_pronouns FROM Users WHERE user_discord_id = {user_discord_id};")
-    user_age = cursor.execute(f"SELECT user_age FROM Users WHERE user_discord_id = {user_discord_id};")
-    user_date_of_birth = cursor.execute(f"SELECT user_date_of_birth FROM Users WHERE user_discord_id = {user_discord_id};")
-    user_bio = cursor.execute(f"SELECT user_bio FROM Users WHERE user_discord_id = {user_discord_id};")
-    user_joined_at = cursor.execute(f"SELECT user_joined_at FROM Users WHERE user_discord_id = {user_discord_id};")
-    user_created_at = cursor.execute(f"SELECT user_created_at FROM Users WHERE user_discord_id = {user_discord_id};")
-
     
+    name = ctx.author.nick if ctx.author.nick is not None else ctx.author.name  # dynamic name :O
+    
+    # Fetching data for the profile
+    cursor.execute("SELECT user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, user_joined_at, user_created_at FROM Users WHERE user_discord_id = %s", (user_discord_id,))
+    user_data = cursor.fetchone()
+
+    if user_data is None:
+        await ctx.send(f'Hey <@{user_discord_id}>! We encountered an issue retrieving your profile information.')
+        return
+    
+    user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, user_joined_at, user_created_at = user_data
+    
+    # Prepare the embed
     aboutMeEmbed = nextcord.Embed(
-    title=f"Get to know {name}!",
-    description=f"{name}'s discord name is {user_name}",
-    color=0xff00ea
+        title=f"Get to know {name}!",
+        description=f"{name}'s discord name is {user_name}",
+        color=0xff00ea
     )
     
-    embed.set_author(
+    aboutMeEmbed.set_author(
         name=f"{name}'s About Me!",
         icon_url=str(ctx.author.avatar.url)
     )
     
-    embed.add_field(
+    aboutMeEmbed.add_field(
         name=f"{name}'s Gender",
         value=f"{name} identifies as {user_gender}",
         inline=True
     )
-    embed.add_field(
+    aboutMeEmbed.add_field(
         name=f"{name}'s Pronouns",
         value=f"{name} uses {user_pronouns} pronouns",
         inline=True
     )
-    embed.add_field(
+    aboutMeEmbed.add_field(
         name=f"{name}'s Age and Birthday",
         value=f"{name} is {user_age} years old\n{name} was born on {user_date_of_birth}",
         inline=True
     )
-    embed.add_field(
+    aboutMeEmbed.add_field(
         name=f"{name}'s User Bio",
-        value=user_bio,
+        value=user_bio or 'No bio set.',
         inline=False
     )
-    embed.add_field(
+    aboutMeEmbed.add_field(
         name=f"{name}'s Server Join Date",
         value=f"{name} joined the server on {user_joined_at}",
         inline=True
     )
-    embed.add_field(
+    aboutMeEmbed.add_field(
         name=f"{name}'s Account Creation",
         value=f"{name} created their account on {user_created_at}",
         inline=True
     )
+    
+    # Send the embed
     await ctx.send(embed=aboutMeEmbed)
 
 @bot.command()
