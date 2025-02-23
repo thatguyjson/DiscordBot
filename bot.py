@@ -286,7 +286,7 @@ async def createuser(ctx):
         try:
             msg = await bot.wait_for("message", check=check, timeout=60)
             user_gender = msg.content.lower()
-            if user_gender not in ["male", "female", "m", "f", "nb", "nonbinary]:
+            if user_gender not in ["male", "female", "m", "f", "nb", "nonbinary"]:
                 await ctx.send("Invalid input. Please enter Male, Female, M,  F, NB, or NonBinary")
                 continue  # Repeat the loop if input is invalid
             if user_gender == "m":
