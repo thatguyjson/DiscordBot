@@ -266,8 +266,8 @@ async def createuser(ctx):
         return msg.author == ctx.author and msg.channel == ctx.channel
     user_discord_id = ctx.author.id # grabs the users ID
     user_name = ctx.author.name # grabs the users discord name
-    user_joined_at = str(ctx.author.joined_at) # grabs when the user joined the server // example data: 2021-05-01 12:34:56
-    user_created_at = str(ctx.author.created_at) # grabs when the user created their account // example data: 2021-05-01 12:34:56
+    user_joined_at = str(ctx.author.joined_at)[:19] # grabs when the user joined the server // example data: 2021-05-01 12:34:56
+    user_created_at = str(ctx.author.created_at)[:19] # grabs when the user created their account // example data: 2021-05-01 12:34:56
 
     # User_gender grab
     await ctx.send("Please enter your gender (Male, Female, M, or F):")
