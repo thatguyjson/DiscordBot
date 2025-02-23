@@ -596,12 +596,12 @@ async def aboutme(ctx):
         await ctx.send(f'Hey <@{user_discord_id}>! We encountered an issue retrieving your profile information.')
         return
     
-    user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, user_joined_at, user_created_at = user_data
+    user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, str(user_joined_at)[:10], str(user_created_at)[:10] = user_data
     
     # Prepare the embed
     aboutMeEmbed = nextcord.Embed(
         title=f"Get to know {name}!",
-        description=f"{name}'s discord name is {user_name}",
+        description=f"{name}'s discord name is {user_name} and they were born on {user_date_of_birth}",
         color=0xff00ea
     )
     
@@ -621,8 +621,8 @@ async def aboutme(ctx):
         inline=True
     )
     aboutMeEmbed.add_field(
-        name=f"{name}'s Age and Birthday",
-        value=f"{name} is {user_age} years old\n{name} was born on {user_date_of_birth}",
+        name=f"{name}'s Age",
+        value=f"{name} is {user_age} years old",
         inline=True
     )
     aboutMeEmbed.add_field(
