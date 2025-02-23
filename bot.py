@@ -319,15 +319,16 @@ async def createuser(ctx):
             "1️⃣ - He/Him\n"
             "2️⃣ - She/Her\n"
             "3️⃣ - He/They\n"
-            "4️⃣ - She/They"
+            "4️⃣ - She/They\n"
+            "5️⃣ - They/Them"
         )
     
         try:
             msg = await bot.wait_for("message", check=check, timeout=60)
-            pronoun_choices = {"1": "He/Him", "2": "She/Her", "3": "He/They", "4": "She/They"}
+            pronoun_choices = {"1": "He/Him", "2": "She/Her", "3": "He/They", "4": "She/They", "5": "They/Them}
             
             if msg.content not in pronoun_choices:
-                await ctx.send("Invalid input. Please enter 1, 2, 3, or 4.")
+                await ctx.send("Invalid input. Please enter 1, 2, 3, 4, or 5.")
                 continue
     
             user_pronouns = pronoun_choices[msg.content]
