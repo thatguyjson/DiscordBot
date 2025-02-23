@@ -272,7 +272,7 @@ async def createuser(ctx):
     user_joined_at = str(ctx.author.joined_at)[:19] # grabs when the user joined the server // example data: 2021-05-01 12:34:56
     user_created_at = str(ctx.author.created_at)[:19] # grabs when the user created their account // example data: 2021-05-01 12:34:56
 
-    # Verify if user already has a profile or not
+    # Blocks if the user already has a profile
     cursor.execute("SELECT 1 FROM Users WHERE user_discord_id = %s", (user_discord_id,))
     userCheck = cursor.fetchone()  # Fetch the first result
     if userCheck:
