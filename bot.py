@@ -414,7 +414,7 @@ async def updateuser(ctx):
                         user_gender = "male"
                     elif user_gender == "f":
                         user_gender = "female"
-                    elif user_gender == "nb" or "nonbinary":
+                    elif user_gender == "nb" or user_gender == "nonbinary":
                         user_gender == "Non-Binary"
         
                     await ctx.send(f"Gender set to: {user_gender.capitalize()} ✅")
@@ -541,7 +541,7 @@ async def updateuser(ctx):
             while True:
                 await ctx.send("Please enter a bio! (Max 255 characters)")
                 try:
-                    msg = await bot.wait_for("message", check=checl, timeout=180)
+                    msg = await bot.wait_for("message", check=check, timeout=180)
                     if len(msg.content) > 255:
                         await ctx.send(f'HEY! <@{member}> I SAID ONLY 255 CHARACTERS MAX!!!>')
                         continue
@@ -565,12 +565,10 @@ async def updateuser(ctx):
         
             except Exception as e:
                 await ctx.send(f"An error occurred while saving your data: {e}")
-        else:
-            await ctx.send("You didnt enter a correct value... Please try running the command again...")
-            return
-                    
+    except:
+        await ctx.send("You didnt enter a correct value... Please try running the command again...")
+        return
             
-
 @bot.command()
 async def praise(ctx, member: nextcord.Member = None):
     if member is None:
