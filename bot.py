@@ -599,10 +599,9 @@ async def aboutme(ctx):
     if userCheck is None:
         await ctx.send(f'Hey <@{user_discord_id}>! You don\'t seem to have a profile. Please try making one using ?createuser')
         return
-        
-    if name != None:
-        name = ctx.author.nick
-    else:
+
+    name = ctx.author.nick
+    if name == None:
         name = ctx.author.name
     
     # Fetching data for the profile
