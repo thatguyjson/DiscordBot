@@ -15,6 +15,7 @@
 ?aboutme --
 ?createuser --
 ?updateuser --
+?whois <user> -- 
 ```
 ## Current Bot Events
 ```
