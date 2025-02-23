@@ -313,7 +313,7 @@ async def createuser(ctx,):
     # User_age grab
     await ctx.send("Please respond with your age!")
     try:
-        msg = await.wait_for("message", check=check, timeout=60)
+        msg = await bot.wait_for("message", check=check, timeout=60)
         if msg.content.len() > 2:
             await ctx.send("Please enter a valid age.")
             return
@@ -350,7 +350,7 @@ async def createuser(ctx,):
             INSERT INTO Users (user_discord_id, user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_joined_at, user_created_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
-            (user_discord_id, user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_joined_at, user_created_at),
+            (NC_user_discord_id, NC_user_name, NC_user_gender, NC_user_pronouns, NC_user_age, NC_user_date_of_birth, NC_user_joined_at, NC_user_created_at),
         )
 
         db.commit()
