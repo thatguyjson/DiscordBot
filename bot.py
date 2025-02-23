@@ -577,9 +577,11 @@ async def on_ready():
     except Exception as e:
         await log_to_channel(f"Error setting up color roles: {e}")
     qotd_task.start()
-    await log_to_channel(f'{dripMention} started QOTD')
+    await log_to_channel('started QOTD')
     time.sleep(5)
     keep_connection_alive.start()
-    await log_to_channel(f'{dripMention} started task to keep DB connection alive.')
+    await log_to_channel('started task to keep DB connection alive.')
+    time.sleep(5)
+    await log_to_channel(f'{dripMention} BOT IS SET UP AND READY TO GO!')
 
 bot.run(botToken)
