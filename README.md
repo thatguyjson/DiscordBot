@@ -14,7 +14,7 @@
 ?readme -- Allows Owners to use requests to grab the data from the github readme.md and sends it via embeds on discord
 ?aboutme --
 ?createuser -- Asks for the users gender, pronouns, age, and DOB and throws that into the Users DB!
-?updateuser --
+?updateuser -- Gives the user the options to update 4 values or add a BIO to their profile!
 ?whois <user> -- 
 ```
 ## Current Bot Events
