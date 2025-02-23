@@ -273,80 +273,88 @@ async def createuser(ctx):
     user_created_at = str(ctx.author.created_at)[:19] # grabs when the user created their account // example data: 2021-05-01 12:34:56
 
     # User_gender grab
-    await ctx.send("Please enter your gender (Male, Female, M, or F):")
-    try:
-        msg = await bot.wait_for("message", check=check, timeout=60)
-        user_gender = msg.content.lower()
-        if user_gender not in ["male", "female", "m", "f"]:
-            await ctx.send("Invalid input. Please enter Male, Female, M, or F.")
+    while True:
+        await ctx.send("Please enter your gender (Male, Female, M, or F):")
+        try:
+            msg = await bot.wait_for("message", check=check, timeout=60)
+            user_gender = msg.content.lower()
+            if user_gender not in ["male", "female", "m", "f"]:
+                await ctx.send("Invalid input. Please enter Male, Female, M, or F.")
+                continue  # Repeat the loop if input is invalid
+            if user_gender == "m":
+                user_gender = "male"
+            elif user_gender == "f":
+                user_gender = "female"
+
+            await ctx.send(f"Gender set to: {user_gender.capitalize()} ✅")
+            break  # Exit the loop if input is valid
+        except asyncio.TimeoutError:
+            await ctx.send("You took too long to respond! ❌")
             return
-        if user_gender == "m":
-            user_gender = "male"
-        elif user_gender == "f":
-            user_gender = "female"
-        
-        await ctx.send(f"Gender set to: {user_gender.capitalize()} ✅")
-    except asyncio.TimeoutError:
-        await ctx.send("You took too long to respond! ❌")
-        return
 
     # user_pronouns grab
-    await ctx.send(
-        "Please enter the number corresponding to your pronouns:\n"
-        "1️⃣ - He/Him\n"
-        "2️⃣ - She/Her\n"
-        "3️⃣ - He/They\n"
-        "4️⃣ - She/They"
-    )
-
-    try:
-        msg = await bot.wait_for("message", check=check, timeout=60)
-        pronoun_choices = {"1": "He/Him", "2": "She/Her", "3": "He/They", "4": "She/They"}
-        
-        if msg.content not in pronoun_choices:
-            await ctx.send("Invalid input. Please enter 1, 2, 3, or 4.")
+    while True:
+        await ctx.send(
+            "Please enter the number corresponding to your pronouns:\n"
+            "1️⃣ - He/Him\n"
+            "2️⃣ - She/Her\n"
+            "3️⃣ - He/They\n"
+            "4️⃣ - She/They"
+        )
+    
+        try:
+            msg = await bot.wait_for("message", check=check, timeout=60)
+            pronoun_choices = {"1": "He/Him", "2": "She/Her", "3": "He/They", "4": "She/They"}
+            
+            if msg.content not in pronoun_choices:
+                await ctx.send("Invalid input. Please enter 1, 2, 3, or 4.")
+                continue
+    
+            user_pronouns = pronoun_choices[msg.content]
+            await ctx.send(f"Pronouns set to: {user_pronouns} ✅")
+            break
+    
+        except asyncio.TimeoutError:
+            await ctx.send("You took too long to respond! ❌")
             return
-
-        user_pronouns = pronoun_choices[msg.content]
-        await ctx.send(f"Pronouns set to: {user_pronouns} ✅")
-
-    except asyncio.TimeoutError:
-        await ctx.send("You took too long to respond! ❌")
-        return
 
     # User_age grab
-    await ctx.send("Please respond with your age!")
-    try:
-        msg = await bot.wait_for("message", check=check, timeout=60)
-        if len(msg.content) > 2:
-            await ctx.send("Please enter a valid age.")
+    while True:
+        await ctx.send("Please respond with your age!")
+        try:
+            msg = await bot.wait_for("message", check=check, timeout=60)
+            if len(msg.content) > 2:
+                await ctx.send("Please enter a valid age.")
+                continue
+            user_age = msg.content
+            user_age = int(user_age)
+            await ctx.send(f"Set your age to {user_age}!")
+            break
+    
+        except asyncio.TimeoutError:
+            await ctx.send("You took too long to respond! ❌")
             return
-        user_age = msg.content
-        user_age = int(user_age)
-        await ctx.send(f"Set your age to {user_age}!")
-
-    except asyncio.TimeoutError:
-        await ctx.send("You took too long to respond! ❌")
-        return
 
     
     # User_date_of_birth grab
-    await ctx.send("Please enter your date of birth in the format YYYY-MM-DD:")
-
-    try:
-        msg = await bot.wait_for("message", check=check, timeout=60)
-        date_pattern = r"^\d{4}-\d{2}-\d{2}$"
-
-        if not re.match(date_pattern, msg.content):
-            await ctx.send("Invalid format! Please enter your date of birth in YYYY-MM-DD format (e.g., 2000-05-15).")
+    whiile True:
+        await ctx.send("Please enter your date of birth in the format YYYY-MM-DD:")
+    
+        try:
+            msg = await bot.wait_for("message", check=check, timeout=60)
+            date_pattern = r"^\d{4}-\d{2}-\d{2}$"
+    
+            if not re.match(date_pattern, msg.content):
+                await ctx.send("Invalid format! Please enter your date of birth in YYYY-MM-DD format (e.g., 2000-05-15).")
+                continue
+    
+            user_date_of_birth = msg.content
+            await ctx.send(f"Date of birth set to: {user_date_of_birth} ✅")
+            break
+    
+        except asyncio.TimeoutError:
+            await ctx.send("You took too long to respond! ❌")
             return
-
-        user_date_of_birth = msg.content
-        await ctx.send(f"Date of birth set to: {user_date_of_birth} ✅")
-
-    except asyncio.TimeoutError:
-        await ctx.send("You took too long to respond! ❌")
-        return
 
     
     try:
