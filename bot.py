@@ -346,10 +346,11 @@ async def createuser(ctx):
 
     
     try:
+        print(f"DEBUG: {user_discord_id}, {user_name}, {user_gender}, {user_pronouns}, {user_age}, {user_date_of_birth}, {user_joined_at}, {user_created_at}")
         cursor.execute(
             """
             INSERT INTO Users (user_discord_id, user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_joined_at, user_created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """,
             (user_discord_id, user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_joined_at, user_created_at),
         )
