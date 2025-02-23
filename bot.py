@@ -591,6 +591,8 @@ async def updateuser(ctx):
 
 @bot.command()
 async def aboutme(ctx):
+    if ctx.channel.id != 1343127549861167135:
+        await ctx.send(f"Please use <#1343127549861167135> and not <#{ctx.channel.id}>!")
     user_discord_id = ctx.author.id
     cursor.execute("SELECT 1 FROM Users WHERE user_discord_id = %s", (user_discord_id,))
     userCheck = cursor.fetchone()  # Fetch the first result
