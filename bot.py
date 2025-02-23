@@ -325,7 +325,7 @@ async def createuser(ctx):
     
         try:
             msg = await bot.wait_for("message", check=check, timeout=60)
-            pronoun_choices = {"1": "He/Him", "2": "She/Her", "3": "He/They", "4": "She/They", "5": "They/Them}
+            pronoun_choices = {"1": "He/Him", "2": "She/Her", "3": "He/They", "4": "She/They", "5": "They/Them"}
             
             if msg.content not in pronoun_choices:
                 await ctx.send("Invalid input. Please enter 1, 2, 3, 4, or 5.")
@@ -468,7 +468,7 @@ async def updateuser(ctx):
             
                 try:
                     msg = await bot.wait_for("message", check=check, timeout=60)
-                    pronoun_choices = {"1": "He/Him", "2": "She/Her", "3": "He/They", "4": "She/They", "5": "They/Them}
+                    pronoun_choices = {"1": "He/Him", "2": "She/Her", "3": "He/They", "4": "She/They", "5": "They/Them"}
                     
                     if msg.content not in pronoun_choices:
                         await ctx.send("Invalid input. Please enter 1, 2, 3, 4, or 5.")
