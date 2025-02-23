@@ -261,7 +261,7 @@ async def role(ctx, member: nextcord.Member = None, role: nextcord.Role = None):
         await ctx.send(f"An error occurred: {e}")
 
 @bot.command()
-async def createuser(ctx,):
+async def createuser(ctx):
     def check(msg):
         return msg.author == ctx.author and msg.channel == ctx.channel
     user_discord_id = ctx.author.id # grabs the users ID
