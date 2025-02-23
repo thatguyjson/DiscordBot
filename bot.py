@@ -268,6 +268,7 @@ async def createuser(ctx,):
     NC_user_name = ctx.author.name # grabs the users discord name
     NC_user_joined_at = str(ctx.author.joined_at) # grabs when the user joined the server // example data: 2021-05-01 12:34:56
     NC_user_created_at = str(ctx.author.created_at) # grabs when the user created their account // example data: 2021-05-01 12:34:56
+    NC_user_bio = ""
 
     # User_gender grab
     await ctx.send("Please enter your gender (Male, Female, M, or F):")
@@ -348,10 +349,10 @@ async def createuser(ctx,):
     try:
         cursor.execute(
             """
-            INSERT INTO Users (user_discord_id, user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_joined_at, user_created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO Users (user_discord_id, user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, user_joined_at, user_created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
-            (NC_user_discord_id, NC_user_name, NC_user_gender, NC_user_pronouns, NC_user_age, NC_user_date_of_birth, NC_user_joined_at, NC_user_created_at),
+            (NC_user_discord_id, NC_user_name, NC_user_gender, NC_user_pronouns, NC_user_age, NC_user_date_of_birth, NC_user_bio, NC_user_joined_at, NC_user_created_at),
         )
 
         db.commit()
