@@ -262,7 +262,7 @@ async def role(ctx, member: nextcord.Member = None, role: nextcord.Role = None):
 
 @bot.command()
 async def createuser(ctx):
-    if ctx.channel != 1343127549861167135:
+    if ctx.channel.id != 1343127549861167135:
         await ctx.send("Please go to <#1343127549861167135> to create your profile!")
         return
     def check(msg):
