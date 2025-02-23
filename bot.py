@@ -261,14 +261,103 @@ async def role(ctx, member: nextcord.Member = None, role: nextcord.Role = None):
 
 @bot.command()
 async def createuser(ctx,):
-    user_discord_id = ctx.author.id # grabs the users ID
-    user_name = ctx.author.name # grabs the users discord name
-    user_gender = 
-    user_pronouns =
-    user_age = 
-    user_date_of_birth = 
-    user_joined_at = ctx.author.joined_at # grabs when the user joined the server // example data: 2021-05-01 12:34:56
-    user_created_at = ctx.author.created_at # grabs when the user created their account // example data: 2021-05-01 12:34:56
+    def check(msg):
+        return msg.author == ctx.author and msg.channel == ctx.channel
+    NC_user_discord_id = ctx.author.id # grabs the users ID
+    NC_user_name = ctx.author.name # grabs the users discord name
+    NC_user_joined_at = str(ctx.author.joined_at) # grabs when the user joined the server // example data: 2021-05-01 12:34:56
+    NC_user_created_at = str(ctx.author.created_at) # grabs when the user created their account // example data: 2021-05-01 12:34:56
+
+    # User_gender grab
+    await ctx.send("Please enter your gender (Male, Female, M, or F):")
+    try:
+        msg = await bot.wait_for("message", check=check, timeout=60)
+        NC_user_gender = msg.content.lower()
+        if NC_user_gender not in ["male", "female", "m", "f"]:
+            await ctx.send("Invalid input. Please enter Male, Female, M, or F.")
+            return
+        if NC_user_gender == "m":
+            NC_user_gender = "male"
+        elif NC_user_gender == "f":
+            NC_user_gender = "female"
+        
+        await ctx.send(f"Gender set to: {NC_user_gender.capitalize()} ✅")
+    except asyncio.TimeoutError:
+        await ctx.send("You took too long to respond! ❌")
+        return
+
+    # user_pronouns grab
+    await ctx.send(
+        "Please enter the number corresponding to your pronouns:\n"
+        "1️⃣ - He/Him\n"
+        "2️⃣ - She/Her\n"
+        "3️⃣ - He/They\n"
+        "4️⃣ - She/They"
+    )
+
+    try:
+        msg = await bot.wait_for("message", check=check, timeout=60)
+        pronoun_choices = {"1": "He/Him", "2": "She/Her", "3": "He/They", "4": "She/They"}
+        
+        if msg.content not in pronoun_choices:
+            await ctx.send("Invalid input. Please enter 1, 2, 3, or 4.")
+            return
+
+        NC_user_pronouns = pronoun_choices[msg.content]
+        await ctx.send(f"Pronouns set to: {NC_user_pronouns} ✅")
+
+    except asyncio.TimeoutError:
+        await ctx.send("You took too long to respond! ❌")
+        return
+
+    # User_age grab
+    await ctx.send("Please respond with your age!")
+    try:
+        msg = await.wait_for("message", check=check, timeout=60)
+        if msg.content.len() > 2:
+            await ctx.send("Please enter a valid age.")
+            return
+        NC_user_age = msg.content
+        await ctx.send(f"Set your age to {NC_user_age}!")
+
+    except asyncio.TimeoutError:
+        await ctx.send("You took too long to respond! ❌")
+        return
+
+    
+    # User_date_of_birth grab
+    await ctx.send("Please enter your date of birth in the format YYYY-MM-DD:")
+
+    try:
+        msg = await bot.wait_for("message", check=check, timeout=60)
+        date_pattern = r"^\d{4}-\d{2}-\d{2}$"
+
+        if not re.match(date_pattern, msg.content):
+            await ctx.send("Invalid format! Please enter your date of birth in YYYY-MM-DD format (e.g., 2000-05-15).")
+            return
+
+        NC_user_date_of_birth = msg.content
+        await ctx.send(f"Date of birth set to: {NC_user_date_of_birth} ✅")
+
+    except asyncio.TimeoutError:
+        await ctx.send("You took too long to respond! ❌")
+        return
+
+    
+    try:
+        cursor.execute(
+            """
+            INSERT INTO Users (user_discord_id, user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_joined_at, user_created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (user_discord_id, user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_joined_at, user_created_at),
+        )
+
+        db.commit()
+        await ctx.send("User data successfully saved to the database! ✅")
+
+    except Exception as e:
+        await ctx.send(f"An error occurred while saving your data: {e}")
 
 @bot.command()
 async def praise(ctx, member: nextcord.Member = None):
