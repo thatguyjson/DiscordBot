@@ -271,12 +271,14 @@ async def createuser(ctx):
     user_name = ctx.author.name # grabs the users discord name
     user_joined_at = str(ctx.author.joined_at)[:19] # grabs when the user joined the server // example data: 2021-05-01 12:34:56
     user_created_at = str(ctx.author.created_at)[:19] # grabs when the user created their account // example data: 2021-05-01 12:34:56
-    cursor.execute("SELECT user_discord_id FROM Users WHERE user_discord_id = %s", (user_discord_id,))
-    userCheck = cursor.fetchone()  # Fetch the first result (should be None if no match)
-    print(userCheck)
+
+    # Verify if user already has a profile or not
+    cursor.execute("SELECT 1 FROM Users WHERE user_discord_id = %s", (user_discord_id,))
+    userCheck = cursor.fetchone()  # Fetch the first result
     if userCheck:
-        await ctx.send(f'Hey <@{user_discord_id}>! You already have a profile. Please dont try creating more!')
+        await ctx.send(f'Hey <@{user_discord_id}>! You already have a profile. Please don\'t try creating more!')
         return
+
     
     # User_gender grab
     while True:
