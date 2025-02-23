@@ -14,7 +14,7 @@
 ?readme -- Allows Owners to use requests to grab the data from the github readme.md and sends it via embeds on discord
 ?aboutme --
 ?createuser --
-?upsertuserinfo --
+?updateuser --
 ```
 ## Current Bot Events
 ```
