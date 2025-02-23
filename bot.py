@@ -395,7 +395,7 @@ async def updateuser(ctx):
     cursor.execute("SELECT 1 FROM Users WHERE user_discord_id = %s", (member,))
     userCheck = cursor.fetchone()  # Fetch the first result
     if userCheck == None:
-        await ctx.send(f'Hey <@{user_discord_id}>! You dont have a profile. Please make one using ?createuser')
+        await ctx.send(f'Hey <@{member}>! You dont have a profile. Please make one using ?createuser')
         return
     await ctx.send(
             f'Hey <@{member}>! What would you like to change about your profile?\n'
