@@ -96,25 +96,35 @@ async def log_to_channel(message):
 @bot.command()
 @commands.check(is_owner)
 async def readme(ctx):
-    response = requests.get(README_URL)
+    try:
+        response = requests.get(README_URL)
 
-    if response.status_code == 200:
-        readme_content = response.text
-        embed_title = "📄 GitHub README.md"
-        embed_color = nextcord.Color.blue()
+        # Check if the request was successful
+        if response.status_code == 200:
+            readme_content = response.text
+            embed_color = nextcord.Color.blue()
+            chunk_size = 1000  # Discord embed text size limit
 
-        # Split the README into chunks of 1000 chars (Discord embeds have a 1024-char limit per field)
-        chunks = [readme_content[i:i+1000] for i in range(0, len(readme_content), 1000)]
+            # Split the README into chunks of 1000 chars (Discord embeds have a 1024-char limit per field)
+            chunks = [readme_content[i:i + chunk_size] for i in range(0, len(readme_content), chunk_size)]
 
-        for index, chunk in enumerate(chunks):
-            embed = nextcord.Embed(
-                title=embed_title if index == 0 else None, 
-                color=embed_color,
-                description=chunk
-            )
-            await ctx.send(embed=embed)
-    else:
-        await ctx.send("❌ Failed to fetch README.md file.")
+            embed_title = "📄 GitHub README.md"
+
+            # Send the first embed with title, then subsequent chunks without a title
+            for index, chunk in enumerate(chunks):
+                embed = nextcord.Embed(
+                    title=embed_title if index == 0 else None, 
+                    color=embed_color,
+                    description=chunk
+                )
+                await ctx.send(embed=embed)
+
+        else:
+            await ctx.send(f"❌ Failed to fetch README.md file. HTTP Status: {response.status_code}")
+    
+    except requests.RequestException as e:
+        # Catch request-related errors like network issues or invalid URL
+        await ctx.send(f"❌ Error fetching the README.md: {str(e)}")
 
 @bot.command()
 @commands.check(is_owner)
@@ -586,7 +596,7 @@ async def aboutme(ctx):
         await ctx.send(f'Hey <@{user_discord_id}>! You don\'t seem to have a profile. Please try making one using ?createuser')
         return
     
-    name = ctx.author.nick if ctx.author.nick is not None else ctx.author.name  # dynamic name :O
+    name = ctx.user.display_name
     
     # Fetching data for the profile
     cursor.execute("SELECT user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, user_joined_at, user_created_at FROM Users WHERE user_discord_id = %s", (user_discord_id,))
