@@ -596,7 +596,7 @@ async def aboutme(ctx):
         await ctx.send(f'Hey <@{user_discord_id}>! We encountered an issue retrieving your profile information.')
         return
     
-    user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, str(user_joined_at)[:10], str(user_created_at)[:10] = user_data
+    user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, user_joined_at, user_created_at = user_data
     
     # Prepare the embed
     aboutMeEmbed = nextcord.Embed(
@@ -632,12 +632,12 @@ async def aboutme(ctx):
     )
     aboutMeEmbed.add_field(
         name=f"{name}'s Server Join Date",
-        value=f"{name} joined the server on {user_joined_at}",
+        value=f"{name} joined the server on {str(user_joined_at)[:10]}",
         inline=True
     )
     aboutMeEmbed.add_field(
         name=f"{name}'s Account Creation",
-        value=f"{name} created their account on {user_created_at}",
+        value=f"{name} created their account on {str(user_created_at)[:10]}",
         inline=True
     )
     
