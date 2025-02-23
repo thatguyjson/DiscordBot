@@ -264,7 +264,7 @@ async def praise(ctx, member: nextcord.Member = None):
     if member is None:
       await ctx.send("Please ping the user you wish to praise!")
     else:
-      message_type = random.randint(1, 11)
+      message_type = random.randint(1, 10)
       messages = {
               1: f"{member.mention}, you look so good right now.",
               2: f"{member.mention}, I love you.",
@@ -273,10 +273,9 @@ async def praise(ctx, member: nextcord.Member = None):
               5: f"{member.mention}, you always brighten my day.",
               6: f"{member.mention}, good job kitten.",
               7: f"{member.mention}, you did a good job for daddy.",
-              8: f"{member.mention}, lets shoot up a school together <3",
-              9: f"{member.mention}, you can be my skibidi rizzler.",
-              10: f"{member.mention}, I would choose you in a garden of roses.",
-              11: f"{member.mention}, lets have sex."
+              8: f"{member.mention}, you can be my skibidi rizzler.",
+              9: f"{member.mention}, I would choose you in a garden of roses.",
+              10: f"{member.mention}, lets have sex."
         }
       await ctx.send(messages[message_type])
 
