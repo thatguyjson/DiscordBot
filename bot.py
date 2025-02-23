@@ -314,7 +314,7 @@ async def createuser(ctx,):
     await ctx.send("Please respond with your age!")
     try:
         msg = await bot.wait_for("message", check=check, timeout=60)
-        if msg.content.len() > 2:
+        if len(msg.content) > 2:
             await ctx.send("Please enter a valid age.")
             return
         NC_user_age = msg.content
