@@ -580,6 +580,11 @@ async def updateuser(ctx):
 @bot.command()
 async def aboutme(ctx):
     user_discord_id = ctx.author.id
+    cursor.execute("SELECT 1 FROM Users WHERE user_discord_id = %s", (user_discord_id,))
+    userCheck = cursor.fetchone()  # Fetch the first result
+    if userCheck:
+        await ctx.send(f'Hey <@{user_discord_id}>! You dont seem to have a profile. Please try making one using ?createuser')
+        return
     name = ctx.author.nick if ctx.author.nick is not None else ctx.author.name # dynamic name :O
     user_name = cursor.execute(f"SELECT user_name FROM Users WHERE user_discord_id = {user_discord_id};")
     user_gender = cursor.execute(f"SELECT user_gender FROM Users WHERE user_discord_id = {user_discord_id};")
