@@ -147,8 +147,8 @@ async def on_member_join(member):
             7: f"Hey {str(member.mention)}, whats cookin good lookin ; )",
             8: f"The way {str(member.mention)} joined the server. Very Demure. Very Mindful",
             9: f"{str(member.mention)} may look good, but can they handle this craziness? Welcome!",
-            10: f"{str(member.mention)} kys",
-            11: f"{str(member.mention)} lets have sex."
+            10: f"{str(member.mention)} are you https? Because without you, im ://",
+            11: f"Hey {str(member.mention)} if you were a vegetable, you'd be a cute-cumber."
         }
         welcome_message = messages[message_type]
         await welcomeChannel.send(welcome_message)
@@ -563,7 +563,7 @@ async def updateuser(ctx):
                 try:
                     msg = await bot.wait_for("message", check=check, timeout=180)
                     if len(msg.content) > 255:
-                        await ctx.send(f'HEY! <@{member}> I SAID ONLY 255 CHARACTERS MAX!!!>')
+                        await ctx.send(f'HEY! <@{member}> I SAID ONLY 255 CHARACTERS MAX!!!')
                         continue
                     user_bio = str(msg.content)
                     await ctx.send("I added/updated your profiles BIO! Thanks!")
@@ -673,10 +673,9 @@ async def praise(ctx, member: nextcord.Member = None):
               4: f"{member.mention}, youre quite the gem, a lovely one at that.",
               5: f"{member.mention}, you always brighten my day.",
               6: f"{member.mention}, good job kitten.",
-              7: f"{member.mention}, you did a good job for daddy.",
+              7: f"womp womp {member.mention}, no praise for you :(",
               8: f"{member.mention}, you can be my skibidi rizzler.",
               9: f"{member.mention}, I would choose you in a garden of roses.",
-              10: f"{member.mention}, lets have sex."
         }
       await ctx.send(messages[message_type])
 
