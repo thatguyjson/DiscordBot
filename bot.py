@@ -664,8 +664,10 @@ async def aboutme(ctx):
 async def whois(ctx, member: nextcord.Member = None):
     if member == None:
         await ctx.send(f"Please @ a member when using this command like this! ?whois {dripMention}")
+        return
     if ctx.channel.id != 1343127549861167135:
         await ctx.send(f"Please use <#1343127549861167135> and not <#{ctx.channel.id}>!")
+        return
     user_discord_id = member.id
     cursor.execute("SELECT 1 FROM Users WHERE user_discord_id = %s", (user_discord_id,))
     userCheck = cursor.fetchone()  # Fetch the first result
