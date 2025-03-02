@@ -661,7 +661,9 @@ async def aboutme(ctx):
     await ctx.send(embed=aboutMeEmbed)
 
 @bot.command()
-async def whois(ctx, member: nextcord.Member):
+async def whois(ctx, member: nextcord.Member = None):
+    if member = None:
+        await ctx.send(f"Please @ a member when using this command like this! ?whois {dripMention}")
     if ctx.channel.id != 1343127549861167135:
         await ctx.send(f"Please use <#1343127549861167135> and not <#{ctx.channel.id}>!")
     user_discord_id = member.id
