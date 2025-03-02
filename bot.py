@@ -764,7 +764,7 @@ async def purge(ctx, amount: int):
         return
 
     try:
-        deleted = await ctx.channel.purge(limit=amount)
+        deleted = await ctx.channel.purge(limit=amount + 1)
         confirmation = await ctx.send(f"✅ Deleted {len(deleted)} messages.", delete_after=5)
     except nextcord.Forbidden:
         await ctx.send("❌ I don't have permission to delete messages in this channel.", delete_after=5)
