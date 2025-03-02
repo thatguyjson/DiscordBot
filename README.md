@@ -12,10 +12,10 @@
 ?purge <number> -- Allows for an Owner to delete the last {number} of messages sent in a channel
 ?timepurge <number> <units> -- Allows for an Owner to delete the last {number} of {units} of messages sent in a channel.
 ?readme -- Allows Owners to use requests to grab the data from the github readme.md and sends it via embeds on discord
-?aboutme --
-?createuser --
-?updateuser --
-?whois <user> -- 
+?aboutme -- Allows for users to view their User Profile via EMBED
+?createuser -- Asks for the users gender, pronouns, age, and DOB and throws that into the Users DB!
+?updateuser -- Gives the user the options to update 4 values or add a BIO to their profile!
+?whois <user> -- Gives every user the option to view someones aboutme user profile if available!
 ```
 ## Current Bot Events
 ```
