@@ -668,11 +668,11 @@ async def whois(ctx, member: nextcord.Member = None):
     if ctx.channel.id != 1343127549861167135:
         await ctx.send(f"Please use <#1343127549861167135> and not <#{ctx.channel.id}>!")
         return
-    user_discord_id = member.id
+    user_discord_id = nextcord.Member.id
     cursor.execute("SELECT 1 FROM Users WHERE user_discord_id = %s", (user_discord_id,))
     userCheck = cursor.fetchone()  # Fetch the first result
     if userCheck is None:
-        await ctx.send(f'Hey <@{ctx.author.id}>, it doesnt seem like <@{member.id} has a profile>. Please have them make one using ?createuser')
+        await ctx.send(f'Hey <@{ctx.author.id}>, it doesnt seem like <@{member.id}> has a profile. Please have them make one using ?createuser')
         return
 
     name = member.display_name
