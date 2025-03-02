@@ -661,6 +661,79 @@ async def aboutme(ctx):
     await ctx.send(embed=aboutMeEmbed)
 
 @bot.command()
+async def whois(ctx, member: nextcord.Member = None):
+    if member == None:
+        await ctx.send(f"Please @ a member when using this command like this! ?whois {dripMention}")
+        return
+    if ctx.channel.id != 1343127549861167135:
+        await ctx.send(f"Please use <#1343127549861167135> and not <#{ctx.channel.id}>!")
+        return
+    user_discord_id = member.id
+    cursor.execute("SELECT 1 FROM Users WHERE user_discord_id = %s", (user_discord_id,))
+    userCheck = cursor.fetchone()  # Fetch the first result
+    if userCheck is None:
+        await ctx.send(f'Hey <@{ctx.author.id}>, it doesnt seem like <@{member.id}> has a profile. Please have them make one using ?createuser')
+        return
+
+    name = member.display_name
+    
+    # Fetching data for the profile
+    cursor.execute("SELECT user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, user_joined_at, user_created_at FROM Users WHERE user_discord_id = %s", (user_discord_id,))
+    user_data = cursor.fetchone()
+
+    if user_data is None:
+        await ctx.send(f'Hey <@{user_discord_id}>! We encountered an issue retrieving your profile information.')
+        return
+    
+    user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, user_joined_at, user_created_at = user_data
+    
+    # Prepare the embed
+    aboutMeEmbed = nextcord.Embed(
+        title=f"Get to know {name}!",
+        description=f"{name}'s discord name is {user_name} and they were born on {user_date_of_birth}",
+        color=0xff00ea
+    )
+    
+    aboutMeEmbed.set_author(
+        name=f"{name}'s About Me!",
+        icon_url=str(member.display_avatar)
+    )
+    
+    aboutMeEmbed.add_field(
+        name=f"{name}'s Gender",
+        value=f"{name} identifies as {user_gender}",
+        inline=True
+    )
+    aboutMeEmbed.add_field(
+        name=f"{name}'s Pronouns",
+        value=f"{name} uses {user_pronouns} pronouns",
+        inline=True
+    )
+    aboutMeEmbed.add_field(
+        name=f"{name}'s Age",
+        value=f"{name} is {user_age} years old",
+        inline=True
+    )
+    aboutMeEmbed.add_field(
+        name=f"{name}'s User Bio",
+        value=user_bio or 'No bio set.',
+        inline=False
+    )
+    aboutMeEmbed.add_field(
+        name=f"{name}'s Server Join Date",
+        value=f"{name} joined the server on {str(user_joined_at)[:10]}",
+        inline=True
+    )
+    aboutMeEmbed.add_field(
+        name=f"{name}'s Account Creation",
+        value=f"{name} created their account on {str(user_created_at)[:10]}",
+        inline=True
+    )
+    
+    # Send the embed
+    await ctx.send(embed=aboutMeEmbed)
+
+@bot.command()
 async def praise(ctx, member: nextcord.Member = None):
     if member is None:
       await ctx.send("Please ping the user you wish to praise!")
