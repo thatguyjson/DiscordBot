@@ -738,6 +738,7 @@ async def whois(ctx, member: nextcord.Member = None):
 async def sql(ctx, *, query: str = None):
     if query == None:
         await ctx.send("Please input a query you want to run.")
+        return
     try: 
         cursor.execute(f'{query};')
         if 'select' in query.lower():
