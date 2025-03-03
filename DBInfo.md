@@ -50,6 +50,18 @@ The database is hosted through **PebbleHost MYSQL**. It's called `customer_83400
 ```
 ---
 
+#### HardCodedDOBs
+*Table that Json uses to hard code users => DOB for happy bday task*
+```json
+[
+  {
+    "user_id": "BIGINT && PRIMARY_KEY", // pulled from API similar to Users -> user_discord_id
+    "user_dob": "DATE" // manually entered
+  }
+]
+```
+---
+
 #### **Christmas** (DEPRECATED)
 *Previously used for Christmas related questions*
 ```json
