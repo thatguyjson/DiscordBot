@@ -10,6 +10,7 @@ from nextcord.ext import commands, tasks
 from nextcord.ui import View, Select
 from datetime import datetime, timedelta, timezone
 from constants import botToken
+from constants import DBhost, DBuser, DBpassword, DBdatabase, DBport
 
 intents = nextcord.Intents.default()
 intents.members = True
@@ -55,11 +56,11 @@ def is_owner(ctx):
 DB stuff down below
 """
 db = mysql.connector.connect(
-    host="na04-sql.pebblehost.com",  # Example: "localhost" or "your-pebblehost-ip"
-    user="customer_834000_DCBot1",
-    password="Nc^QYdisxVFN884.0J5jYIZm",
-    database="customer_834000_DCBot1",
-    port=3306
+    host=DBhost,
+    user=DBuser,
+    password=DBpassword,
+    database=DBdatabase,
+    port=DBport
 )
 cursor = db.cursor()
 
