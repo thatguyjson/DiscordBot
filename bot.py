@@ -734,6 +734,24 @@ async def whois(ctx, member: nextcord.Member = None):
     await ctx.send(embed=aboutMeEmbed)
 
 @bot.command()
+@commands.check(is_owner)
+async def sql(ctx, *, query: str = None):
+    if query == None:
+        await ctx.send("Please input a query you want to run.")
+    try: 
+        cursor.execute(f'{query};')
+        if 'select' in query.lower():
+            selected_data = cursor.fetchall()
+            formatted_data = "\n".join([str(row) for row in selected_data])
+            await ctx.send(f"**Query Results:**\n{formatted_data}")
+            return
+        else:
+            db.commit()
+    except Exception as e:
+        # Catch any other unexpected errors
+        await ctx.send(f"An unexpected error occurred: {str(e)}")
+
+@bot.command()
 async def praise(ctx, member: nextcord.Member = None):
     if member is None:
       await ctx.send("Please ping the user you wish to praise!")
