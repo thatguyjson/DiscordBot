@@ -47,10 +47,14 @@ color_role = {
 }
 README_URL = 'https://raw.githubusercontent.com/thatguyjson/DiscordBot/refs/heads/master/README.md'
 dripMention = "<@639904427624628224>" # can use this in (f'x') text to @ myself in discord
+dripID = 639904427624628224
 
 def is_owner(ctx):
     role = nextcord.utils.get(ctx.guild.roles, name=ROLE_NAME)
     return role in ctx.author.roles or ctx.author.id == 542882947183673344
+
+def is_drip(ctx):
+    return ctx.author.id == 639904427624628224
 
 """
 DB stuff down below
@@ -903,6 +907,12 @@ async def timepurge(ctx, amount: int, unit: str):
         await ctx.send("Invalid input! Please ensure the amount is a number and the unit is a valid time unit.")
     except Exception as e:
         await ctx.send(f"An error occurred: {e}")
+
+@bot.command()
+@commands.check(is_drip)
+async def restart(ctx):
+    await ctx.send("Restarting bot...")
+    await bot.close()
 
 @role.error
 async def role_error(ctx, error):
