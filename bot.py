@@ -749,6 +749,7 @@ async def sql(ctx, *, query: str = None):
             return
         else:
             db.commit()
+            await ctx.send(f"Succesfully ran: ```\n{query}\n```")
     except Exception as e:
         # Catch any other unexpected errors
         await ctx.send(f"An unexpected error occurred: {str(e)}")
