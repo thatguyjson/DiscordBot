@@ -1,7 +1,5 @@
 # DiscordBot by Json!
-
-## Current Commands
-
+# Current Commands
 ```
 ?add_question <question> -- Allows for Owners to add questions to the live database
 ?ping -- The bot will return the ping in 'ms'
@@ -18,9 +16,12 @@
 ?whois <user> -- Gives every user the option to view someones aboutme user profile if available!
 ?sql <query> -- Allows for owners to run Queries from discord itself instead of having to open the discord panel
 ```
-## Current Bot Events
+# Current Bot Events
 ```
 on_member_join -- When a new member joins, it automatically sends 1 of 11 random messages to the welcomeChannel
 on_message_delete -- When a member deletes a message, it will be logged and sent to a Owners only channel
 on_ready -- Runs when the bot starts up.
 ```
+# Cool side stuff ig?
+
+1. Currently have setup for automatically wishing people happy birthday by using a task to check for anyones BDAY date through a hardcoded table?

@@ -740,6 +740,35 @@ async def whois(ctx, member: nextcord.Member = None):
 
 @bot.command()
 @commands.check(is_owner)
+async def add_dob(ctx, member: nextcord.Member = None, dob: str = None):
+    if member == None: # If member wasnt mentioned, dont continue command
+        await ctx.send("Please mention a user in order to use this command!")
+        return
+    if dob == None: # If dob wasnt mentioned, dont continue command
+        await ctx.send("Please enter a DOB in this format: YYYY-MM-DD")
+        return
+    try:
+        dob_date = datetime.strptime(dob, "%Y-%m-%d").date()
+    except ValueError:
+        await ctx.send("Invalid date format! Please use YYYY-MM-DD.")
+        return
+    user_id = member.id
+    user_dob = dob_date
+    try:
+        cursor.execute(
+            """
+            INSERT INTO HardCodedDOBs (user_id, user_dob)
+            VALUES (%s, %s)
+            """,
+            (user_id, user_dob),
+        )
+        db.commit()
+        await ctx.send("User data successfully saved to the database! ✅")
+    except Exception as e:
+        await ctx.send(f"An error occurred while saving your data: {e}")
+
+@bot.command()
+@commands.check(is_owner)
 async def sql(ctx, *, query: str = None):
     if query == None:
         await ctx.send("Please input a query you want to run.")
@@ -757,6 +786,7 @@ async def sql(ctx, *, query: str = None):
     except Exception as e:
         # Catch any other unexpected errors
         await ctx.send(f"An unexpected error occurred: {str(e)}")
+
 
 @bot.command()
 async def praise(ctx, member: nextcord.Member = None):
