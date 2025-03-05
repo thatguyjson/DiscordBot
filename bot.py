@@ -47,7 +47,7 @@ color_role = {
 }
 README_URL = 'https://raw.githubusercontent.com/thatguyjson/DiscordBot/refs/heads/master/README.md'
 dripMention = "<@639904427624628224>" # can use this in (f'x') text to @ myself in discord
-dripID = 639904427624628224
+dripID = "639904427624628224"
 
 def is_owner(ctx):
     role = nextcord.utils.get(ctx.guild.roles, name=ROLE_NAME)
@@ -939,19 +939,18 @@ async def timepurge(ctx, amount: int, unit: str):
         await ctx.send(f"An error occurred: {e}")
 
 @bot.command()
-@commands.check(is_drip)
+@commands.check(is_owner)
 async def restart(ctx):
-    counter = 0
-    while ctx.author.id != dripID:
-        await ctx.send(f"{dripMention}!!! <@{ctx.author.id}> IS TRYING TO RESTART THE BOT WITHOUT YOUR PERMISSION!!!")
-        counter += 1
-        if counter == 5:
-            return
-    await ctx.send("Restarting bot.")
-    time.sleep(1)
-    await ctx.send("Restarting bot..")
-    time.sleep(1)
-    await ctx.send("Restarting bot...")
+    if str(ctx.author.id) != dripID:
+        for i in range(1, 5, 1):
+            await ctx.send(f'{dripMention}!!! <@{ctx.author.id}> IS TRYING TO RESTART THE BOT WITHOUT YOUR PERMISSION!!! GET THEM!!!')
+            time.sleep(0.1)
+        return
+        
+    close_message = await ctx.send("Restarting Bot, Please wait")
+    for i in range(1, 3, 1):
+        dots = "." * i
+        await close_message.edit(content=f"{close_message}{dots}")
     await bot.close()
 
 @role.error
