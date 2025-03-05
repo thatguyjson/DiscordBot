@@ -942,15 +942,14 @@ async def timepurge(ctx, amount: int, unit: str):
 @commands.check(is_owner)
 async def restart(ctx):
     if str(ctx.author.id) != dripID:
-        for i in range(1, 5, 1):
+        for i in range(1, 6):
             await ctx.send(f'{dripMention}!!! <@{ctx.author.id}> IS TRYING TO RESTART THE BOT WITHOUT YOUR PERMISSION!!! GET THEM!!!')
             time.sleep(0.1)
         return
         
     close_message = await ctx.send("Restarting Bot, Please wait")
-    for i in range(1, 3, 1):
-        dots = "." * i
-        await close_message.edit(content=f"{close_message}{dots}")
+    for i in range(1, 4):
+        await close_message.edit(content=f"Restarting Bot, Please wait{'.' * i}")
     await bot.close()
 
 @role.error
