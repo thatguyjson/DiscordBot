@@ -10,6 +10,7 @@ from nextcord.ext import commands, tasks
 from nextcord.ui import View, Select
 from datetime import datetime, timedelta, timezone
 from constants import botToken
+from constants import DBhost, DBuser, DBpassword, DBdatabase, DBport
 
 intents = nextcord.Intents.default()
 intents.members = True
@@ -46,20 +47,24 @@ color_role = {
 }
 README_URL = 'https://raw.githubusercontent.com/thatguyjson/DiscordBot/refs/heads/master/README.md'
 dripMention = "<@639904427624628224>" # can use this in (f'x') text to @ myself in discord
+dripID = 639904427624628224
 
 def is_owner(ctx):
     role = nextcord.utils.get(ctx.guild.roles, name=ROLE_NAME)
     return role in ctx.author.roles or ctx.author.id == 542882947183673344
 
+def is_drip(ctx):
+    return ctx.author.id == 639904427624628224
+
 """
 DB stuff down below
 """
 db = mysql.connector.connect(
-    host="na04-sql.pebblehost.com",  # Example: "localhost" or "your-pebblehost-ip"
-    user="customer_834000_DCBot1",
-    password="Nc^QYdisxVFN884.0J5jYIZm",
-    database="customer_834000_DCBot1",
-    port=3306
+    host=DBhost,
+    user=DBuser,
+    password=DBpassword,
+    database=DBdatabase,
+    port=DBport
 )
 cursor = db.cursor()
 
@@ -763,6 +768,27 @@ async def add_dob(ctx, member: nextcord.Member = None, dob: str = None):
         await ctx.send(f"An error occurred while saving your data: {e}")
 
 @bot.command()
+@commands.check(is_owner)
+async def sql(ctx, *, query: str = None):
+    if query == None:
+        await ctx.send("Please input a query you want to run.")
+        return
+    try: 
+        cursor.execute(f'{query};')
+        if 'select' in query.lower():
+            selected_data = cursor.fetchall()
+            formatted_data = "\n".join([str(row) for row in selected_data])
+            await ctx.send(f"**Query Results:**\n{formatted_data}")
+            return
+        else:
+            db.commit()
+            await ctx.send(f"Succesfully ran: ```\n{query}\n```")
+    except Exception as e:
+        # Catch any other unexpected errors
+        await ctx.send(f"An unexpected error occurred: {str(e)}")
+
+
+@bot.command()
 async def praise(ctx, member: nextcord.Member = None):
     if member is None:
       await ctx.send("Please ping the user you wish to praise!")
@@ -911,6 +937,22 @@ async def timepurge(ctx, amount: int, unit: str):
         await ctx.send("Invalid input! Please ensure the amount is a number and the unit is a valid time unit.")
     except Exception as e:
         await ctx.send(f"An error occurred: {e}")
+
+@bot.command()
+@commands.check(is_drip)
+async def restart(ctx):
+    counter = 0
+    while ctx.author.id != dripID:
+        await ctx.send(f"{dripMention}!!! <@{ctx.author.id}> IS TRYING TO RESTART THE BOT WITHOUT YOUR PERMISSION!!!")
+        counter += 1
+        if counter == 5:
+            return
+    await ctx.send("Restarting bot.")
+    time.sleep(1)
+    await ctx.send("Restarting bot..")
+    time.sleep(1)
+    await ctx.send("Restarting bot...")
+    await bot.close()
 
 @role.error
 async def role_error(ctx, error):

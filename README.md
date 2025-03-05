@@ -14,6 +14,7 @@
 ?createuser -- Asks for the users gender, pronouns, age, and DOB and throws that into the Users DB!
 ?updateuser -- Gives the user the options to update 4 values or add a BIO to their profile!
 ?whois <user> -- Gives every user the option to view someones aboutme user profile if available!
+?sql <query> -- Allows for owners to run Queries from discord itself instead of having to open the discord panel
 ```
 # Current Bot Events
 ```
