@@ -10,7 +10,6 @@ from nextcord.ext import commands, tasks
 from nextcord.ui import View, Select
 from datetime import datetime, timedelta, timezone
 from constants import botToken
-from constants import DBhost, DBuser, DBpassword, DBdatabase, DBport
 
 intents = nextcord.Intents.default()
 intents.members = True
@@ -25,27 +24,11 @@ big info section cause tee hee i love information so much!
 """
 
 message_ids = {}
-QOTD_CHANNEL_ID = 1299231913726312478
-STAFF_CHANNEL_ID = 1299230783721967626
-LOG_CHANNEL_ID = 1299264058436091915
+STAFF_CHANNEL_ID = 1441257381848940555
+LOG_CHANNEL_ID = 1445168307148820732
 ROLE_NAME = "*"
-VerifyName = "Members"
-ServerUpdateName = "Server Updates"
-EventUpdateName = "Event Updates"
+VerifyName = "Victims"
 VerifyRole = "✅"
-ServerUpdateRole = "✨"
-EventUpdateRole = "☄️"
-color_role = {
-    1: ("Purple", "💜"),
-    2: ("Orange", "🍊"),
-    3: ("Aqua", "🌊"),
-    4: ("PinkPastel", "🌸"),
-    5: ("OrangePastel", "🟠"),
-    6: ("Black", "🖤"),
-    7: ("DeepPink", "💗"),
-    8: ("Maroon", "💓")
-}
-README_URL = 'https://raw.githubusercontent.com/thatguyjson/DiscordBot/refs/heads/master/README.md'
 dripMention = "<@639904427624628224>" # can use this in (f'x') text to @ myself in discord
 dripID = "639904427624628224"
 
@@ -55,31 +38,6 @@ def is_owner(ctx):
 
 def is_drip(ctx):
     return ctx.author.id == 639904427624628224
-
-"""
-DB stuff down below
-"""
-db = mysql.connector.connect(
-    host=DBhost,
-    user=DBuser,
-    password=DBpassword,
-    database=DBdatabase,
-    port=DBport
-)
-cursor = db.cursor()
-
-
-@bot.command()
-@commands.check(is_owner)
-async def add_question(ctx, *, question=None):
-    if question:
-      sql = "INSERT INTO QuotesDB (quotes) VALUES (%s)"
-      val = (question,)
-      cursor.execute(sql, val)
-      db.commit()  # Save the changes to the database
-      await ctx.send(f"Question added: {question}")
-    else:
-      await ctx.send("Please include a question in this format. ?add_question <Question>")
 
 async def log_to_channel(message):
     log_channel = bot.get_channel(LOG_CHANNEL_ID)
@@ -100,39 +58,6 @@ async def log_to_channel(message):
 
 @bot.command()
 @commands.check(is_owner)
-async def readme(ctx):
-    try:
-        response = requests.get(README_URL)
-
-        # Check if the request was successful
-        if response.status_code == 200:
-            readme_content = response.text
-            embed_color = nextcord.Color.blue()
-            chunk_size = 1000  # Discord embed text size limit
-
-            # Split the README into chunks of 1000 chars (Discord embeds have a 1024-char limit per field)
-            chunks = [readme_content[i:i + chunk_size] for i in range(0, len(readme_content), chunk_size)]
-
-            embed_title = "📄 GitHub README.md"
-
-            # Send the first embed with title, then subsequent chunks without a title
-            for index, chunk in enumerate(chunks):
-                embed = nextcord.Embed(
-                    title=embed_title if index == 0 else None, 
-                    color=embed_color,
-                    description=chunk
-                )
-                await ctx.send(embed=embed)
-
-        else:
-            await ctx.send(f"❌ Failed to fetch README.md file. HTTP Status: {response.status_code}")
-    
-    except requests.RequestException as e:
-        # Catch request-related errors like network issues or invalid URL
-        await ctx.send(f"❌ Error fetching the README.md: {str(e)}")
-
-@bot.command()
-@commands.check(is_owner)
 async def ping(ctx):
     latency_message = f'Ping: {round(bot.latency * 1000)} ms'
     await ctx.send(latency_message)
@@ -143,7 +68,7 @@ async def on_member_join(member):
     if welcomeChannel is not None:
         message_type = random.randint(1, 11)
         messages = {
-            1: f"DAMN {str(member.mention)} looks GOOD TODAY",
+            1: f"DAMN {str(member.mention)} look at you...",
             2: f"{str(member.mention)} just joined! Hows it goin' cutie :3",
             3: f"{str(member.mention)} just fell from heaven. Oh how lucky we are",
             4: f"{str(member.mention)} looks absolutely stunning. Welcome!",
@@ -151,7 +76,7 @@ async def on_member_join(member):
             6: f"{str(member.mention)} has got to be the best looking person here :O",
             7: f"Hey {str(member.mention)}, whats cookin good lookin ; )",
             8: f"The way {str(member.mention)} joined the server. Very Demure. Very Mindful",
-            9: f"{str(member.mention)} may look good, but can they handle this craziness? Welcome!",
+            9: f"{str(member.mention)} may look good, I am gonna make them my play toy.",
             10: f"{str(member.mention)} are you https? Because without you, im ://",
             11: f"Hey {str(member.mention)} if you were a vegetable, you'd be a cute-cumber."
         }
@@ -174,26 +99,6 @@ async def on_raw_reaction_add(payload):
             await member.add_roles(role)
             await log_to_channel(f'Assigned {VerifyName} to {member.display_name}')
 
-    elif payload.message_id == message_ids.get('server_update_message_id') and str(payload.emoji) == ServerUpdateRole:
-        role = nextcord.utils.get(guild.roles, name=ServerUpdateName)
-        if role is not None:
-            await member.add_roles(role)
-            await log_to_channel(f"Assigned {ServerUpdateName} to {member.display_name}")
-
-    elif payload.message_id == message_ids.get('event_update_message_id') and str(payload.emoji) == EventUpdateRole:
-        role = nextcord.utils.get(guild.roles, name=EventUpdateName)
-        if role is not None:
-            await member.add_roles(role)
-            await log_to_channel(f"Assigned {EventUpdateName} to {member.display_name}")
-    elif payload.message_id == message_ids.get('color_message_id'):
-        for role_name, emoji in color_role.values():
-            if str(payload.emoji) == emoji:
-                role = nextcord.utils.get(guild.roles, name=role_name)
-                if role:
-                    await member.add_roles(role)
-                    await log_to_channel(f"Assigned {role_name} to {member.display_name}")
-                break
-
 @bot.event
 async def on_raw_reaction_remove(payload):
     guild = bot.get_guild(payload.guild_id)
@@ -210,26 +115,6 @@ async def on_raw_reaction_remove(payload):
             await member.remove_roles(role)
             await log_to_channel(f'Removed {VerifyName} from {member.display_name}')
 
-    elif payload.message_id == message_ids.get('server_update_message_id') and str(payload.emoji) == ServerUpdateRole:
-        role = nextcord.utils.get(guild.roles, name=ServerUpdateName)
-        if role is not None:
-            await member.remove_roles(role)
-            await log_to_channel(f"Removed {ServerUpdateName} from {member.display_name}")
-
-    elif payload.message_id == message_ids.get('event_update_message_id') and str(payload.emoji) == EventUpdateRole:
-        role = nextcord.utils.get(guild.roles, name=EventUpdateName)
-        if role is not None:
-            await member.remove_roles(role)
-            await log_to_channel(f"Removed {EventUpdateName} from {member.display_name}")
-    elif payload.message_id == message_ids.get('color_message_id'):
-        for role_name, emoji in color_role.values():
-            if str(payload.emoji) == emoji:
-                role = nextcord.utils.get(guild.roles, name=role_name)
-                if role:
-                    await member.remove_roles(role)
-                    await log_to_channel(f"Removed {role_name} from {member.display_name}")
-                break
-
 
 @bot.command()
 @commands.check(is_owner)
@@ -245,7 +130,7 @@ async def kick(ctx, user: nextcord.Member = None, *, reason=None):
 @bot.command()
 @commands.check(is_owner)
 @commands.has_permissions(ban_members=True)
-async def evict(ctx, user: nextcord.Member = None, *, reason=None):
+async def ban(ctx, user: nextcord.Member = None, *, reason=None):
     if user == None:
         await ctx.send("Please enter a user!")
         return
@@ -274,519 +159,6 @@ async def role(ctx, member: nextcord.Member = None, role: nextcord.Role = None):
         await ctx.send("I don't have permission to manage roles.")
     except nextcord.HTTPException as e:
         await ctx.send(f"An error occurred: {e}")
-
-@bot.command()
-async def createuser(ctx):
-    if ctx.channel.id != 1343127549861167135:
-        await ctx.send("Please go to <#1343127549861167135> to create your profile!")
-        return
-    def check(msg):
-        return msg.author == ctx.author and msg.channel == ctx.channel
-    user_discord_id = ctx.author.id # grabs the users ID
-    user_name = ctx.author.name # grabs the users discord name
-    user_joined_at = str(ctx.author.joined_at)[:19] # grabs when the user joined the server // example data: 2021-05-01 12:34:56
-    user_created_at = str(ctx.author.created_at)[:19] # grabs when the user created their account // example data: 2021-05-01 12:34:56
-
-    # Blocks if the user already has a profile
-    cursor.execute("SELECT 1 FROM Users WHERE user_discord_id = %s", (user_discord_id,))
-    userCheck = cursor.fetchone()  # Fetch the first result
-    if userCheck:
-        await ctx.send(f'Hey <@{user_discord_id}>! You already have a profile. Please don\'t try creating more!')
-        return
-
-    
-    # User_gender grab
-    while True:
-        await ctx.send("Please enter your gender (Male, Female, M,  F, NB, or NonBinary):")
-        try:
-            msg = await bot.wait_for("message", check=check, timeout=60)
-            user_gender = msg.content.lower()
-            if user_gender not in ["male", "female", "m", "f", "nb", "nonbinary"]:
-                await ctx.send("Invalid input. Please enter Male, Female, M,  F, NB, or NonBinary")
-                continue  # Repeat the loop if input is invalid
-            if user_gender == "m":
-                user_gender = "male"
-            elif user_gender == "f":
-                user_gender = "female"
-            elif user_gender == "nb" or "nonbinary":
-                user_gender == "Non-Binary"
-
-            await ctx.send(f"Gender set to: {user_gender.capitalize()} ✅")
-            break  # Exit the loop if input is valid
-        except asyncio.TimeoutError:
-            await ctx.send("You took too long to respond! ❌")
-            return
-
-    # user_pronouns grab
-    while True:
-        await ctx.send(
-            "Please enter the number corresponding to your pronouns:\n"
-            "1️⃣ - He/Him\n"
-            "2️⃣ - She/Her\n"
-            "3️⃣ - He/They\n"
-            "4️⃣ - She/They\n"
-            "5️⃣ - They/Them"
-        )
-    
-        try:
-            msg = await bot.wait_for("message", check=check, timeout=60)
-            pronoun_choices = {"1": "He/Him", "2": "She/Her", "3": "He/They", "4": "She/They", "5": "They/Them"}
-            
-            if msg.content not in pronoun_choices:
-                await ctx.send("Invalid input. Please enter 1, 2, 3, 4, or 5.")
-                continue
-    
-            user_pronouns = pronoun_choices[msg.content]
-            await ctx.send(f"Pronouns set to: {user_pronouns} ✅")
-            break
-    
-        except asyncio.TimeoutError:
-            await ctx.send("You took too long to respond! ❌")
-            return
-
-    # User_age grab
-    while True:
-        await ctx.send("Please respond with your age!")
-        try:
-            msg = await bot.wait_for("message", check=check, timeout=60)
-            if len(msg.content) > 2:
-                await ctx.send("Please enter a valid age.")
-                continue
-            user_age = msg.content
-            user_age = int(user_age)
-            await ctx.send(f"Set your age to {user_age}!")
-            break
-    
-        except asyncio.TimeoutError:
-            await ctx.send("You took too long to respond! ❌")
-            return
-
-    
-    # User_date_of_birth grab
-    while True:
-        await ctx.send("Please enter your date of birth in the format YYYY-MM-DD:")
-    
-        try:
-            msg = await bot.wait_for("message", check=check, timeout=60)
-            date_pattern = r"^\d{4}-\d{2}-\d{2}$"
-    
-            if not re.match(date_pattern, msg.content):
-                await ctx.send("Invalid format! Please enter your date of birth in YYYY-MM-DD format (e.g., 2000-05-15).")
-                continue
-    
-            user_date_of_birth = msg.content
-            await ctx.send(f"Date of birth set to: {user_date_of_birth} ✅")
-            break
-    
-        except asyncio.TimeoutError:
-            await ctx.send("You took too long to respond! ❌")
-            return
-
-    
-    try:
-        print(f"DEBUG: {user_discord_id}, {user_name}, {user_gender}, {user_pronouns}, {user_age}, {user_date_of_birth}, {user_joined_at}, {user_created_at}")
-        cursor.execute(
-            """
-            INSERT INTO Users (user_discord_id, user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_joined_at, user_created_at)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            """,
-            (user_discord_id, user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_joined_at, user_created_at),
-        )
-
-
-        db.commit()
-        await ctx.send("User data successfully saved to the database! ✅")
-
-    except Exception as e:
-        await ctx.send(f"An error occurred while saving your data: {e}")
-
-@bot.command()
-async def updateuser(ctx):
-    if ctx.channel.id != 1343127549861167135:
-        await ctx.send("Please use <#1343127549861167135> for all commands related to user profiles!")
-    def check(msg):
-        return msg.author == ctx.author and msg.channel == ctx.channel
-    member = ctx.author.id
-    # Blocks if the user if they dont have a profile
-    cursor.execute("SELECT 1 FROM Users WHERE user_discord_id = %s", (member,))
-    userCheck = cursor.fetchone()  # Fetch the first result
-    if userCheck == None:
-        await ctx.send(f'Hey <@{member}>! You dont have a profile. Please make one using ?createuser')
-        return
-    await ctx.send(
-            f'Hey <@{member}>! What would you like to change about your profile?\n'
-            "1️⃣ - Gender\n"
-            "2️⃣ - Pronouns\n"
-            "3️⃣ - Age\n"
-            "4️⃣ - Birthday\n"
-            "5️⃣ - Add a Profile Bio!"
-        )
-    try:
-        msg = await bot.wait_for("message", check=check, timeout=60)
-        if msg.content == "1":
-            while True:
-                await ctx.send("Please enter your preferred gender (Male, Female, M,  F, NB, or NonBinary):")
-                try:
-                    msg = await bot.wait_for("message", check=check, timeout=60)
-                    user_gender = msg.content.lower()
-                    if user_gender not in ["male", "female", "m", "f", "nb", "nonbinary"]:
-                        await ctx.send("Invalid input. Please enter Male, Female, M,  F, NB, or NonBinary")
-                        continue  # Repeat the loop if input is invalid
-                    if user_gender == "m":
-                        user_gender = "male"
-                    elif user_gender == "f":
-                        user_gender = "female"
-                    elif user_gender == "nb" or user_gender == "nonbinary":
-                        user_gender == "Non-Binary"
-                        await ctx.send(f"Gender set to: {user_gender.capitalize()} ✅")
-                        break
-        
-                    await ctx.send(f"Gender set to: {user_gender.capitalize()} ✅")
-                    break  # Exit the loop if input is valid
-                except asyncio.TimeoutError:
-                    await ctx.send("You took too long to respond! ❌")
-                    return
-            try:
-                cursor.execute(
-                    """
-                    UPDATE Users
-                    SET user_gender = %s
-                    WHERE user_discord_id = %s
-                    """,
-                    (user_gender, member),
-                )
-                db.commit()
-                await ctx.send("User data successfully saved to the database! ✅")
-        
-            except Exception as e:
-                await ctx.send(f"An error occurred while saving your data: {e}")
-        elif msg.content == "2":
-            while True:
-                await ctx.send(
-                    "Please enter the number corresponding to your pronouns:\n"
-                    "1️⃣ - He/Him\n"
-                    "2️⃣ - She/Her\n"
-                    "3️⃣ - He/They\n"
-                    "4️⃣ - She/They\n"
-                    "5️⃣ - They/Them"
-                )
-            
-                try:
-                    msg = await bot.wait_for("message", check=check, timeout=60)
-                    pronoun_choices = {"1": "He/Him", "2": "She/Her", "3": "He/They", "4": "She/They", "5": "They/Them"}
-                    
-                    if msg.content not in pronoun_choices:
-                        await ctx.send("Invalid input. Please enter 1, 2, 3, 4, or 5.")
-                        continue
-            
-                    user_pronouns = pronoun_choices[msg.content]
-                    await ctx.send(f"Pronouns set to: {user_pronouns} ✅")
-                    break
-            
-                except asyncio.TimeoutError:
-                    await ctx.send("You took too long to respond! ❌")
-                    return
-            try:
-                cursor.execute(
-                    """
-                    UPDATE Users
-                    SET user_pronouns = %s
-                    WHERE user_discord_id = %s
-                    """,
-                    (user_pronouns, member),
-                )
-                db.commit()
-                await ctx.send("User data successfully saved to the database! ✅")
-        
-            except Exception as e:
-                await ctx.send(f"An error occurred while saving your data: {e}")
-        elif msg.content == "3":
-            while True:
-                await ctx.send("Please respond with your age!")
-                try:
-                    msg = await bot.wait_for("message", check=check, timeout=60)
-                    if len(msg.content) > 2:
-                        await ctx.send("Please enter a valid age.")
-                        continue
-                    user_age = msg.content
-                    user_age = int(user_age)
-                    await ctx.send(f"Set your age to {user_age}!")
-                    break
-            
-                except asyncio.TimeoutError:
-                    await ctx.send("You took too long to respond! ❌")
-                    return
-            try:
-                cursor.execute(
-                    """
-                    UPDATE Users
-                    SET user_age = %s
-                    WHERE user_discord_id = %s
-                    """,
-                    (user_age, member),
-                )
-                db.commit()
-                await ctx.send("User data successfully saved to the database! ✅")
-        
-            except Exception as e:
-                await ctx.send(f"An error occurred while saving your data: {e}")
-        elif msg.content == "4":
-            while True:
-                await ctx.send("Please enter your date of birth in the format YYYY-MM-DD:")
-                try:
-                    msg = await bot.wait_for("message", check=check, timeout=60)
-                    date_pattern = r"^\d{4}-\d{2}-\d{2}$"
-            
-                    if not re.match(date_pattern, msg.content):
-                        await ctx.send("Invalid format! Please enter your date of birth in YYYY-MM-DD format (e.g., 2000-05-15).")
-                        continue
-            
-                    user_date_of_birth = msg.content
-                    await ctx.send(f"Date of birth set to: {user_date_of_birth} ✅")
-                    break
-            
-                except asyncio.TimeoutError:
-                    await ctx.send("You took too long to respond! ❌")
-                    return
-            try:
-                cursor.execute(
-                    """
-                    UPDATE Users
-                    SET user_date_of_birth = %s
-                    WHERE user_discord_id = %s
-                    """,
-                    (user_date_of_birth, member),
-                )
-                db.commit()
-                await ctx.send("User data successfully saved to the database! ✅")
-        
-            except Exception as e:
-                await ctx.send(f"An error occurred while saving your data: {e}")
-        elif msg.content == "5":
-            while True:
-                await ctx.send("Please enter a bio! (Max 255 characters)")
-                try:
-                    msg = await bot.wait_for("message", check=check, timeout=180)
-                    if len(msg.content) > 255:
-                        await ctx.send(f'HEY! <@{member}> I SAID ONLY 255 CHARACTERS MAX!!!')
-                        continue
-                    user_bio = str(msg.content)
-                    await ctx.send("I added/updated your profiles BIO! Thanks!")
-                    break
-                except asyncio.TimeoutError:
-                    await ctx.send("You took too long to respond! ❌")
-                    return
-            try:
-                cursor.execute(
-                    """
-                    UPDATE Users
-                    SET user_bio = %s
-                    WHERE user_discord_id = %s
-                    """,
-                    (user_bio, member),
-                )
-                db.commit()
-                await ctx.send("User data successfully saved to the database! ✅")
-        
-            except Exception as e:
-                await ctx.send(f"An error occurred while saving your data: {e}")
-    except:
-        await ctx.send("You didnt enter a correct value... Please try running the command again...")
-        return
-
-@bot.command()
-async def aboutme(ctx):
-    if ctx.channel.id != 1343127549861167135:
-        await ctx.send(f"Please use <#1343127549861167135> and not <#{ctx.channel.id}>!")
-    user_discord_id = ctx.author.id
-    cursor.execute("SELECT 1 FROM Users WHERE user_discord_id = %s", (user_discord_id,))
-    userCheck = cursor.fetchone()  # Fetch the first result
-    if userCheck is None:
-        await ctx.send(f'Hey <@{user_discord_id}>! You don\'t seem to have a profile. Please try making one using ?createuser')
-        return
-
-    name = ctx.author.nick
-    if name == None:
-        name = ctx.author.name
-    
-    # Fetching data for the profile
-    cursor.execute("SELECT user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, user_joined_at, user_created_at FROM Users WHERE user_discord_id = %s", (user_discord_id,))
-    user_data = cursor.fetchone()
-
-    if user_data is None:
-        await ctx.send(f'Hey <@{user_discord_id}>! We encountered an issue retrieving your profile information.')
-        return
-    
-    user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, user_joined_at, user_created_at = user_data
-    
-    # Prepare the embed
-    aboutMeEmbed = nextcord.Embed(
-        title=f"Get to know {name}!",
-        description=f"{name}'s discord name is {user_name} and they were born on {user_date_of_birth}",
-        color=0xff00ea
-    )
-    
-    aboutMeEmbed.set_author(
-        name=f"{name}'s About Me!",
-        icon_url=str(ctx.author.avatar.url)
-    )
-    
-    aboutMeEmbed.add_field(
-        name=f"{name}'s Gender",
-        value=f"{name} identifies as {user_gender}",
-        inline=True
-    )
-    aboutMeEmbed.add_field(
-        name=f"{name}'s Pronouns",
-        value=f"{name} uses {user_pronouns} pronouns",
-        inline=True
-    )
-    aboutMeEmbed.add_field(
-        name=f"{name}'s Age",
-        value=f"{name} is {user_age} years old",
-        inline=True
-    )
-    aboutMeEmbed.add_field(
-        name=f"{name}'s User Bio",
-        value=user_bio or 'No bio set.',
-        inline=False
-    )
-    aboutMeEmbed.add_field(
-        name=f"{name}'s Server Join Date",
-        value=f"{name} joined the server on {str(user_joined_at)[:10]}",
-        inline=True
-    )
-    aboutMeEmbed.add_field(
-        name=f"{name}'s Account Creation",
-        value=f"{name} created their account on {str(user_created_at)[:10]}",
-        inline=True
-    )
-    
-    # Send the embed
-    await ctx.send(embed=aboutMeEmbed)
-
-@bot.command()
-async def whois(ctx, member: nextcord.Member = None):
-    if member == None:
-        await ctx.send(f"Please @ a member when using this command like this! ?whois {dripMention}")
-        return
-    if ctx.channel.id != 1343127549861167135:
-        await ctx.send(f"Please use <#1343127549861167135> and not <#{ctx.channel.id}>!")
-        return
-    user_discord_id = member.id
-    cursor.execute("SELECT 1 FROM Users WHERE user_discord_id = %s", (user_discord_id,))
-    userCheck = cursor.fetchone()  # Fetch the first result
-    if userCheck is None:
-        await ctx.send(f'Hey <@{ctx.author.id}>, it doesnt seem like <@{member.id}> has a profile. Please have them make one using ?createuser')
-        return
-
-    name = member.display_name
-    
-    # Fetching data for the profile
-    cursor.execute("SELECT user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, user_joined_at, user_created_at FROM Users WHERE user_discord_id = %s", (user_discord_id,))
-    user_data = cursor.fetchone()
-
-    if user_data is None:
-        await ctx.send(f'Hey <@{user_discord_id}>! We encountered an issue retrieving your profile information.')
-        return
-    
-    user_name, user_gender, user_pronouns, user_age, user_date_of_birth, user_bio, user_joined_at, user_created_at = user_data
-    
-    # Prepare the embed
-    aboutMeEmbed = nextcord.Embed(
-        title=f"Get to know {name}!",
-        description=f"{name}'s discord name is {user_name} and they were born on {user_date_of_birth}",
-        color=0xff00ea
-    )
-    
-    aboutMeEmbed.set_author(
-        name=f"{name}'s About Me!",
-        icon_url=str(member.display_avatar)
-    )
-    
-    aboutMeEmbed.add_field(
-        name=f"{name}'s Gender",
-        value=f"{name} identifies as {user_gender}",
-        inline=True
-    )
-    aboutMeEmbed.add_field(
-        name=f"{name}'s Pronouns",
-        value=f"{name} uses {user_pronouns} pronouns",
-        inline=True
-    )
-    aboutMeEmbed.add_field(
-        name=f"{name}'s Age",
-        value=f"{name} is {user_age} years old",
-        inline=True
-    )
-    aboutMeEmbed.add_field(
-        name=f"{name}'s User Bio",
-        value=user_bio or 'No bio set.',
-        inline=False
-    )
-    aboutMeEmbed.add_field(
-        name=f"{name}'s Server Join Date",
-        value=f"{name} joined the server on {str(user_joined_at)[:10]}",
-        inline=True
-    )
-    aboutMeEmbed.add_field(
-        name=f"{name}'s Account Creation",
-        value=f"{name} created their account on {str(user_created_at)[:10]}",
-        inline=True
-    )
-    
-    # Send the embed
-    await ctx.send(embed=aboutMeEmbed)
-
-@bot.command()
-@commands.check(is_owner)
-async def add_dob(ctx, member: nextcord.Member = None, dob: str = None):
-    if member == None: # If member wasnt mentioned, dont continue command
-        await ctx.send("Please mention a user in order to use this command!")
-        return
-    if dob == None: # If dob wasnt mentioned, dont continue command
-        await ctx.send("Please enter a DOB in this format: YYYY-MM-DD")
-        return
-    try:
-        dob_date = datetime.strptime(dob, "%Y-%m-%d").date()
-    except ValueError:
-        await ctx.send("Invalid date format! Please use YYYY-MM-DD.")
-        return
-    user_id = member.id
-    user_dob = dob_date
-    try:
-        cursor.execute(
-            """
-            INSERT INTO HardCodedDOBs (user_id, user_dob)
-            VALUES (%s, %s)
-            """,
-            (user_id, user_dob),
-        )
-        db.commit()
-        await ctx.send("User data successfully saved to the database! ✅")
-    except Exception as e:
-        await ctx.send(f"An error occurred while saving your data: {e}")
-
-@bot.command()
-@commands.check(is_owner)
-async def sql(ctx, *, query: str = None):
-    if query == None:
-        await ctx.send("Please input a query you want to run.")
-        return
-    try: 
-        cursor.execute(f'{query};')
-        if 'select' in query.lower():
-            selected_data = cursor.fetchall()
-            formatted_data = "\n".join([str(row) for row in selected_data])
-            await ctx.send(f"**Query Results:**\n{formatted_data}")
-            return
-        else:
-            db.commit()
-            await ctx.send(f"Succesfully ran: ```\n{query}\n```")
-    except Exception as e:
-        # Catch any other unexpected errors
-        await ctx.send(f"An unexpected error occurred: {str(e)}")
-
 
 @bot.command()
 async def praise(ctx, member: nextcord.Member = None):
@@ -819,69 +191,6 @@ async def on_message_delete(message):
         embed.add_field(name="Channel", value=message.channel.name, inline=True)
         embed.add_field(name="Content", value=message.content or "No content", inline=False)
         await staff_channel.send(embed=embed)
-
-# Task to check the time every minute
-@tasks.loop(minutes=1)
-async def qotd_task():
-    """
-    Task to send the Question of the Day (QOTD) at 6 AM PST daily.
-    """
-    try:
-        # Calculate current Pacific Time (PST or PDT)
-        utc_now = datetime.utcnow()
-        pacific_offset = timedelta(hours=-8 if utc_now.timetuple().tm_isdst == 0 else -7)  # Adjust for DST
-        pacific_time = utc_now + pacific_offset
-
-        # Check if it's exactly 6:00 AM PST
-        if pacific_time.hour == 6 and pacific_time.minute == 0:
-            # Fetch a random question from the 'christmas' table
-            cursor.execute("SELECT question FROM christmas ORDER BY RAND() LIMIT 1")
-            question = cursor.fetchone()
-
-            if not question:
-                # If no questions in 'christmas', fallback to 'QuotesDB'
-                cursor.execute("SELECT Quotes FROM QuotesDB ORDER BY RAND() LIMIT 1")
-                question = cursor.fetchone()
-
-            if question:
-                question_text = question[0]  # Extract question text
-
-                # Send the QOTD to the specified channel
-                qotd_channel = bot.get_channel(QOTD_CHANNEL_ID)
-                if qotd_channel:
-                    await qotd_channel.send(
-                        "@everyone\n🌟 **Question of the Day** 🌟\n{}".format(question_text)
-                    )
-
-                    # Move the used question to the appropriate table
-                    if "christmas" in question:
-                        cursor.execute("DELETE FROM christmas WHERE question = %s", (question_text,))
-                    else:
-                        cursor.execute("INSERT INTO UsedQuotesDB (UsedQuotes) VALUES (%s)", (question_text,))
-                        cursor.execute("DELETE FROM QuotesDB WHERE Quotes = %s", (question_text,))
-                    
-                    db.commit()
-            else:
-                # Log if no questions are left in both tables
-                await log_to_channel(
-                    "<@639904427624628224> URGENT!!! No questions left in both 'christmas' and 'QuotesDB' tables!"
-                )
-        else:
-            # Sleep asynchronously until the next minute
-            await asyncio.sleep(60)
-    except Exception as e:
-        # Log errors for debugging
-        await log_to_channel(f"Error in QOTD task: {e}")
-
-
-@tasks.loop(hours=2)
-async def keep_connection_alive():
-    cursor.execute("SELECT UsedQuotes FROM UsedQuotesDB where id = 3")
-    aliveQuote = cursor.fetchone()
-    if aliveQuote:
-      debug_channel = bot.get_channel(1307966892853432391)
-      if debug_channel:
-        await debug_channel.send(aliveQuote)
 
 @bot.command()
 @commands.check(is_owner)
@@ -967,15 +276,15 @@ down below is on_ready + bot.run
 @bot.event
 async def on_ready():
     global welcomeChannel
-    welcomeChannel = bot.get_channel(1280813683789791305)
+    welcomeChannel = bot.get_channel(1441256988997582991)
     if welcomeChannel is None:
         await log_to_channel("Could not find the welcome channel.")
     else:
-        await log_to_channel(f'Logged in as {bot.user.name}. Now commencing all startup processes. Please wait est: 25 seconds...') # time.sleep(x) multuplied by 5
+        await log_to_channel(f'Logged in as {bot.user.name}. Now commencing all startup processes.')
         time.sleep(5)
 
     # Verify Roles Message
-    channel1 = bot.get_channel(1280805997790887978)
+    channel1 = bot.get_channel(1441499797457600563)
     if channel1 is not None:
         try:
             await channel1.purge(limit=100)  # Limit the number of messages to purge
@@ -986,44 +295,6 @@ async def on_ready():
             time.sleep(5)
         except Exception as e:
             await log_to_channel(f"Error setting up verify role: {e}")
-
-    # Server Updates and Event Updates Messages
-    channel2 = bot.get_channel(1299261004169089066)
-    if channel2 is not None:
-        try:
-            await channel2.purge(limit=100)
-            server_update_message = await channel2.send("React with ✨ to gain the Server Updates Role")
-            await server_update_message.add_reaction("✨")
-            event_update_message = await channel2.send("React with ☄️ to gain the Event Updates Role")
-            await event_update_message.add_reaction("☄️")
-
-            message_ids["server_update_message_id"] = server_update_message.id
-            message_ids["event_update_message_id"] = event_update_message.id
-            await log_to_channel("Server Updates and Event Updates roles setup complete.")
-            time.sleep(5)
-        except Exception as e:
-            await log_to_channel(f"Error setting up update roles: {e}")
-
-    # Color Roles Message
-    try:
-        color_message = "\n".join([f"{emoji} - {role}" for role, emoji in color_role.values()])
-        color_message_sent = await channel2.send(
-            f"React to the image with the color you would like:\n**Available color roles:**\n{color_message}"
-        )
-        message_ids["color_message_id"] = color_message_sent.id
-
-        for _, emoji in color_role.values():
-            await color_message_sent.add_reaction(emoji)
-            await asyncio.sleep(1)  # Add delay to avoid hitting rate limits
-        time.sleep(8)
-    except Exception as e:
-        await log_to_channel(f"Error setting up color roles: {e}")
-    qotd_task.start()
-    await log_to_channel('started QOTD')
-    time.sleep(5)
-    keep_connection_alive.start()
-    await log_to_channel('started task to keep DB connection alive.')
-    time.sleep(5)
-    await log_to_channel(f'{dripMention} BOT IS SET UP AND READY TO GO!')
+        await log_to_channel(f'{dripMention} BOT IS SET UP AND READY TO GO!')
 
 bot.run(botToken)
