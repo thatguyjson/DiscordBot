@@ -1,5 +1,4 @@
 import nextcord
-import mysql.connector
 import asyncio
 import time
 import random
