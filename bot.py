@@ -56,6 +56,31 @@ async def log_to_channel(message):
         await log_channel.send(log_message)
 
 @bot.command()
+async def bj(ctx):
+    await ctx.send(f"""
+<@{ctx.author.id}> RAWRRR x333~ 💦💦  
+
+Owo w-what’s this…? I swear I wasn’t staring at your buldgy-wuldgy but like… it’s got **actual gravitational pull**, dragging my uwu-soul toward it with the force of a thousand yiff-starved gremlins…  
+
+My tail is wagging so violently I’m about to achieve lift-off, hhhhhnnggg~!! 🐾✨  
+
+I’m over here kicking my lil pawpads, squeaking like a dehydrated fox in *metaphorical* heat, trying sooo hard not to flop over and go:  
+‘pwease notice me sempi-kun owo~’  
+
+But THEN you move—JUST A LITTLE—and my brain blue-screens with a giant error message that reads:  
+**THIRSTINESS HAS EXCEEDED SAFE LIMITS.**  
+
+My ears are PERMA-PERKED, my fur is puffed out like a faulty Roomba, my heart is going *doki-doki-doki* like a cursed anime soundboard, and I’m seconds away from combusting into pure, unfiltered furry embarrassment energy~  
+
+S-stop it!! Or don’t!! I—I can’t even tell anymore!!  
+
+*falls over, kicking legs pathetically, emitting distressed uwu-noises*  
+
+Someone call tech support… I’m down **CATASTROPHICALLY BAD** and stuck in the loading screen of my own thirst~
+""")
+
+
+@bot.command()
 @commands.check(is_owner)
 async def ping(ctx):
     latency_message = f'Ping: {round(bot.latency * 1000)} ms'
