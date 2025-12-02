@@ -58,38 +58,38 @@ async def log_to_channel(message):
 @bot.command()
 async def bj(ctx):
     await ctx.send(f"""
-    <@{ctx.author.id> 😣8=✊=====D
+    <@{ctx.author.id}> 😣8=✊=====D
     it will be over quick, be good for me...   
     """)
     time.sleep(0.5)
     await ctx.send(f"""
-    <@{ctx.author.id> 😣8==✊====D
+    <@{ctx.author.id}> 😣8==✊====D
     you know you like it, little boy slut
     """)
     time.sleep(0.5)
     await ctx.send(f"""
-    <@{ctx.author.id> 😣8===✊===D
+    <@{ctx.author.id}> 😣8===✊===D
     youre so big~   
     """)
     time.sleep(0.5)
-    await ctx.send(f"<@{ctx.author.id> 😣8====✊==D")
+    await ctx.send(f"<@{ctx.author.id}> 😣8====✊==D")
     time.sleep(0.5)
-    await ctx.send(f"<@{ctx.author.id> 😣8=====✊=D")
+    await ctx.send(f"<@{ctx.author.id}> 😣8=====✊=D")
     time.sleep(0.5)
-    await ctx.send(f"<@{ctx.author.id> 😣8====✊==D")
+    await ctx.send(f"<@{ctx.author.id}> 😣8====✊==D")
     time.sleep(0.5)
     await ctx.send(f"""
-    <@{ctx.author.id> 😣8===✊===D
+    <@{ctx.author.id}> 😣8===✊===D
     you want to cum for me right?   
     """)
     time.sleep(0.5)
     await ctx.send(f"""
-    <@{ctx.author.id> 😣8==✊====D
+    <@{ctx.author.id}> 😣8==✊====D
     youre almost there baby...
     """)
     time.sleep(0.5)
     await ctx.send(f"""
-    <@{ctx.author.id> 😣8=✊=====D💦
+    <@{ctx.author.id}> 😣8=✊=====D💦
     youre such a good boy :3
     """)
 
