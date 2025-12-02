@@ -8,6 +8,7 @@
 ?praise <user> -- Alows for any member to send 1 of 11 random praise messages to a user
 ?purge <number> -- Allows for an Owner to delete the last {number} of messages sent in a channel
 ?timepurge <number> <units> -- Allows for an Owner to delete the last {number} of {units} of messages sent in a channel.
+?bj -- just a funny command...
 ```
 # Current Bot Events
 ```
