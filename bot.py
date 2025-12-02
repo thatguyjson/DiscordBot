@@ -152,6 +152,12 @@ async def on_raw_reaction_remove(payload):
             await member.remove_roles(role)
             await log_to_channel(f'Removed {VerifyName} from {member.display_name}')
 
+@bot.command()
+async def kill(ctx, user: nextcord.Member = None):
+    if user == None:
+        await ctx.send("Please enter a user!")
+        return
+    await ctx.send(f"<@{user.id}> u been died by <@{ctx.author.id}>")
 
 @bot.command()
 @commands.check(is_owner)
